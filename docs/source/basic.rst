@@ -4,7 +4,7 @@ Basic Usage
 ===========
 All imports are from::
 
-    from cte_tree.models import ...
+    from cte_forest.models import ...
 
 
 .. contents::
@@ -14,7 +14,7 @@ All imports are from::
 Defining a Node
 ---------------
 
-Define a Model which inherits from cte_tree.models.CTENode::
+Define a Model which inherits from cte_forest.models.CTENode::
 
     class Category(CTENode):
 

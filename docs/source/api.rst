@@ -1,4 +1,4 @@
-Module cte_tree.models
+Module cte_forest.models
 ============================================
 
 .. moduleauthor:: Alexis Petrounias <www.petrounias.org>
@@ -48,7 +48,7 @@ order).
 CTENode
 =======
 
-.. autoclass:: cte_tree.models.CTENode
+.. autoclass:: cte_forest.models.CTENode
    :members:
 
 
@@ -56,6 +56,6 @@ CTENode
 CTENodeManager
 ==============
 
-.. autoclass:: cte_tree.models.CTENodeManager
+.. autoclass:: cte_forest.models.CTENodeManager
    :members:
 

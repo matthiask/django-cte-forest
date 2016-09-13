@@ -95,5 +95,5 @@ compiler, and thus impose no overhead.
 Testing
 =======
 
-Use the cte_tree_test Django dummy application and module. By default, it uses
+Use the cte_forest_test Django dummy application and module. By default, it uses
 a localhost database 'dummy' with user 'dummy' and password 'dummy'.

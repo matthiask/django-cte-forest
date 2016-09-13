@@ -49,7 +49,7 @@ from django.core.exceptions import ImproperlyConfigured, FieldError
 from django.db.models import F, Avg
 
 # Django CTE Trees
-from cte_tree_test.models import *
+from cte_forest_test.models import *
 
 
 class SimpleNodeTest(TestCase):

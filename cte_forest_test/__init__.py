@@ -31,7 +31,9 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-""" Dummy Django application settings so unittest and Sphinx autodoc can work.
+""" Django CTE Trees test application. Use this application in an otherwise
+    empty Django project in order to run unit tests for the cte_forest
+    application.
 """
 
 __status__ = "beta"
@@ -39,17 +41,6 @@ __version__ = "1.0.2"
 __maintainer__ = (u"Alexis Petrounias <www.petrounias.org>", )
 __author__ = (u"Alexis Petrounias <www.petrounias.org>", )
 
-DEBUG = True
 
-SECRET_KEY = 'dummy'
+VERSION = (1, 0, 2)
 
-INSTALLED_APPS = ('cte_tree', 'cte_tree_test', )
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dummy',
-        'USER' : 'postgres',
-        'PASSWORD' : '',
-    }
-}

@@ -13,4 +13,4 @@ services:
 install:
 - pip install -U pip wheel
 - pip install $REQ psycopg2 pytz
-script: PYTHONWARNINGS=all PYTHONPATH=. ./cte_tree_test/manage.py test
+script: PYTHONWARNINGS=all PYTHONPATH=. ./cte_forest_test/manage.py test

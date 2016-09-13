@@ -35,3 +35,7 @@ nosetests.xml
 .project
 .pydevproject
 .idea
+
+# Stuff
+*.sw?
+venv

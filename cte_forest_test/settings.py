@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # This document is free and open-source software, subject to the OSI-approved
@@ -40,12 +39,17 @@ __version__ = "1.0.2"
 __maintainer__ = (u"Alexis Petrounias <www.petrounias.org>", )
 __author__ = (u"Alexis Petrounias <www.petrounias.org>", )
 
-# Python
-import os
-import sys
+DEBUG = True
 
+SECRET_KEY = 'dummy'
 
-if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cte_tree_test.settings")
-    from django.core.management import execute_from_command_line
-    execute_from_command_line(sys.argv)
+INSTALLED_APPS = ('cte_forest', 'cte_forest_test', )
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dummy',
+        'USER' : 'matthias',
+        'PASSWORD' : '',
+    }
+}

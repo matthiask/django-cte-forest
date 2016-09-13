@@ -45,7 +45,7 @@ import sys, os
 
 # add package root as well as dummy Django application so models can be imported
 sys.path.append(os.path.abspath('../..'))
-os.environ['DJANGO_SETTINGS_MODULE'] = 'cte_tree_test.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'cte_forest_test.settings'
 
 extensions = ['sphinx.ext.autodoc']
 

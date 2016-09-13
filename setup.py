@@ -31,28 +31,20 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-""" Setuptools for Django CTE Trees.
-"""
 
-__status__ = "alpha"
-__version__ = "1.0.2"
-__maintainer__ = (u"David Hoffman", )
-
-# Setup tools
 from setuptools import setup, find_packages
 
 
 setup(
-    name = 'django-cte-trees-python3',
-    version = ":versiontools:cte_tree:VERSION",
+    name = 'django-cte-forest',
+    version='0.1.0',
     packages = find_packages(),
-    maintainer = 'David Hoffman',
-    maintainer_email = 'david.hoffman@stjoseph.com',
+    maintainer = 'Matthias Kestenholz',
+    maintainer_email = 'mk@feinheit.ch',
     keywords = 'django, postgresql, cte, trees, sql',
     license = 'BSD',
     description = 'Django Adjacency-List trees using PostgreSQL Common Table Expressions (CTE).',
-    url = 'https://github.com/stjosephcontent/django-cte-trees',
-    download_url = "https://github.com/stjosephcontent/django-cte-trees/archive/master.zip",
+    url = 'https://github.com/matthiask/django-cte-forest',
     classifiers = [
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
@@ -63,6 +55,5 @@ setup(
         'Programming Language :: Python',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    setup_requires = [ 'versiontools >= 1.3.1', ],
-    tests_require = [ 'Django >= 1.8', ],
-    zip_safe = True)
+    zip_safe = True,
+)

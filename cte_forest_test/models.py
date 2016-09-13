@@ -46,7 +46,7 @@ from django.db.models import Model, ForeignKey, CharField, FloatField, \
     PositiveIntegerField, DateField, UUIDField, CASCADE
 
 # Django CTE Trees
-from cte_tree.models import CTENode, CTENodeManager
+from cte_forest.models import CTENode, CTENodeManager
 
 
 class SimpleNode(CTENode, Model):

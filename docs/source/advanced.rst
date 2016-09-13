@@ -4,7 +4,7 @@ Advanced Usage
 ===========
 All imports are from::
 
-    from cte_tree.models import ...
+    from cte_forest.models import ...
 
 
 .. contents::
@@ -47,7 +47,7 @@ Therefore, the fields package provides three such fields which are automatically
 set to null, blank, and non-editable, and can be used as such::
 
 
-    from cte_tree.fields import DepthField, PathField, OrderingField
+    from cte_forest.fields import DepthField, PathField, OrderingField
 
     class Category(CTENode):
 

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # This document is free and open-source software, subject to the OSI-approved
@@ -31,9 +32,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-""" Django CTE Trees test application. Use this application in an otherwise
-    empty Django project in order to run unit tests for the cte_tree
-    application.
+""" Dummy Django application settings so unittest and Sphinx autodoc can work.
 """
 
 __status__ = "beta"
@@ -41,6 +40,12 @@ __version__ = "1.0.2"
 __maintainer__ = (u"Alexis Petrounias <www.petrounias.org>", )
 __author__ = (u"Alexis Petrounias <www.petrounias.org>", )
 
+# Python
+import os
+import sys
 
-VERSION = (1, 0, 2)
 
+if __name__ == "__main__":
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cte_forest_test.settings")
+    from django.core.management import execute_from_command_line
+    execute_from_command_line(sys.argv)

@@ -108,12 +108,12 @@ Via pip and pypi::
     pip install django-cte-trees
 
 
-Include the cte_tree module as an application in your Django project through the
+Include the cte_forest module as an application in your Django project through the
 INSTALLED_APPS list in your settings::
 
     INSTALLED_APPS = (
         ...,
-        'cte_tree',
+        'cte_forest',
         ...,
     )
 
