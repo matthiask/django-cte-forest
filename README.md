@@ -1,12 +1,10 @@
-Note
-====
-
-This is a fork that introduces support for Python 3.
-
-The original work was done by Alexis Petrounias <www.petrounias.org>.
-
 Django CTE Trees
 ================
+
+[![Build Status](https://travis-ci.org/matthiask/django-cte-forest.svg?branch=master)](https://travis-ci.org/matthiask/django-cte-forest)
+
+**Note!** This is a fork that introduces support for Python 3 and recent Django
+versions.  The original work was done by Alexis Petrounias.
 
 Django Adjacency-List trees using PostgreSQL Common Table Expressions (CTE). Its
 aim is to completely hide the management of tree structure.
