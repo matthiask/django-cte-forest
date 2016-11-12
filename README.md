@@ -79,9 +79,9 @@ Prerequisites
 Core:
 
 - PostgreSQL >= 8.4
-- Python >= 2.4
+- Python >= 2.7, >= 3.4
 - psycopg2 >= 2.4
-- Django >= 1.2
+- Django >= 1.10
 
 
 Obtaining
@@ -103,7 +103,7 @@ Via setup tools::
 
 Via pip and pypi::
 
-    pip install django-cte-trees
+    pip install django-cte-forest
 
 
 Include the cte_forest module as an application in your Django project through the
