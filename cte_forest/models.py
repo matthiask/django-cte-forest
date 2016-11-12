@@ -122,6 +122,7 @@ class CTENodeManager(Manager):
     # Related manager lookup should return this custom Manager in order to use
     # the custom QuerySet above.
     use_for_related_fields = True
+    silence_use_for_related_fields_deprecation = True
 
 
     def _ensure_parameters(self):
@@ -1282,6 +1283,6 @@ class CTENode(Model):
 
     class Meta:
         abstract = True
+        base_manager_name = 'objects'
         # Prevent cycles in order to maintain tree / forest property.
         unique_together = [('id', 'parent'), ]
-
