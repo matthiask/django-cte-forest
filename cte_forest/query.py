@@ -225,7 +225,7 @@ class CTEQuery(Query):
             connection = connections[using]
         # Check that the compiler will be able to execute the query
         for alias, aggregate in self.annotation_select.items():
-            connection.ops.check_aggregate_support(aggregate)
+            connection.ops.check_expression_support(aggregate)
         # Instantiate the custom compiler.
         return {
             CTEUpdateQuery : CTEUpdateQueryCompiler,
