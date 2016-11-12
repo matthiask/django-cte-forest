@@ -178,7 +178,7 @@ class CTENodeManager(Manager):
             found = False
             for f in self.model._meta.fields:
                 if isinstance(f, ForeignKey):
-                    if f.rel.to == self.model:
+                    if f.remote_field.model == self.model:
                         setattr(self.model, '_cte_node_parent', f.name)
                         found = True
             if not found:
@@ -196,7 +196,7 @@ class CTENodeManager(Manager):
                 self.model._cte_node_parent]))
 
         # Ensure parent relation is a Foreign Key to self.
-        if not parent_field.rel.to == self.model:
+        if not parent_field.remote_field.model == self.model:
             raise ImproperlyConfigured(''.join([
                 _('CTENode._cte_node_parent must specify a Foreign Key to self, '
                   'instead it is: '),
