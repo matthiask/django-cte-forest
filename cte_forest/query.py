@@ -318,15 +318,17 @@ class CTECompiler(object):
             query.model._cte_node_ordering,
         )
         def maybe_prefix_order_by(order_by):
-            for index, o in enumerate(order_by):
-                _o = o.lstrip('-')
-                if _o in cte_columns:
-                    order_by[index] = '{sign}{cte}.{column}'.format(
-                        sign = '-' if o[0] == '-' else '',
-                        cte = query.model._cte_node_table,
-                        column = _o)
-        maybe_prefix_order_by(query.order_by)
-        maybe_prefix_order_by(query.extra_order_by)
+            return [
+                '{sign}{cte}.{column}'.format(
+                    sign='-' if order[0] == '-' else '',
+                    cte=query.model._cte_node_table,
+                    column=order.lstrip('-'))
+                if order.lstrip('-') in cte_columns
+                else order
+                for order in order_by
+            ]
+        query.order_by = maybe_prefix_order_by(query.order_by)
+        query.extra_order_by = maybe_prefix_order_by(query.extra_order_by)
 
         # Obtain compiled SQL from Django.
         sql = as_sql()
