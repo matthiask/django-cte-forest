@@ -84,7 +84,7 @@ class CTENodeManager(Manager):
     TREE_TRAVERSAL_DFS = 'dfs'
     TREE_TRAVERSAL_BFS = 'bfs'
     TREE_TRAVERSAL_METHODS = (TREE_TRAVERSAL_NONE, TREE_TRAVERSAL_DFS,
-        TREE_TRAVERSAL_BFS)
+                              TREE_TRAVERSAL_BFS)
     TREE_TRAVERSAL_CHOICES = (
         (TREE_TRAVERSAL_NONE, _('none')),
         (TREE_TRAVERSAL_DFS, _('depth first search')),
@@ -103,7 +103,7 @@ class CTENodeManager(Manager):
     DELETE_METHOD_GRANDMOTHER = 'grandmother'
     DELETE_METHOD_MONARCHY = 'monarchy'
     DELETE_METHODS = (DELETE_METHOD_NONE, DELETE_METHOD_PHARAOH,
-        DELETE_METHOD_GRANDMOTHER, DELETE_METHOD_MONARCHY)
+                      DELETE_METHOD_GRANDMOTHER, DELETE_METHOD_MONARCHY)
     DELETE_METHOD_CHOICES = (
         (DELETE_METHOD_NONE, _('none')),
         (DELETE_METHOD_PHARAOH, _('pharaoh (all subtree)')),
@@ -132,32 +132,32 @@ class CTENodeManager(Manager):
         if not hasattr(self.model, '_cte_node_table') or \
                 self.model._cte_node_table is None:
             setattr(self.model, '_cte_node_table',
-                self.DEFAULT_TABLE_NAME)
+                    self.DEFAULT_TABLE_NAME)
 
         if not hasattr(self.model, '_cte_node_depth') or \
                 self.model._cte_node_depth is None:
             setattr(self.model, '_cte_node_depth',
-                self.VIRTUAL_FIELD_DEPTH)
+                    self.VIRTUAL_FIELD_DEPTH)
 
         if not hasattr(self.model, '_cte_node_path') or \
                 self.model._cte_node_depth is None:
             setattr(self.model, '_cte_node_path',
-                self.VIRTUAL_FIELD_PATH)
+                    self.VIRTUAL_FIELD_PATH)
 
         if not hasattr(self.model, '_cte_node_ordering') or \
                 self.model._cte_node_ordering is None:
             setattr(self.model, '_cte_node_ordering',
-                self.VIRTUAL_FIELD_ORDERING)
+                    self.VIRTUAL_FIELD_ORDERING)
 
         if not hasattr(self.model, '_cte_node_traversal') or \
                 self.model._cte_node_traversal is None:
             setattr(self.model, '_cte_node_traversal',
-                self.DEFAULT_TREE_TRAVERSAL)
+                    self.DEFAULT_TREE_TRAVERSAL)
 
         if not hasattr(self.model, '_cte_node_children') or \
                 self.model._cte_node_children is None:
             setattr(self.model, '_cte_node_children',
-                self.DEFAULT_CHILDREN_NAME)
+                    self.DEFAULT_CHILDREN_NAME)
 
         if not hasattr(self.model, '_cte_node_primary_key_type'):
             setattr(self.model, '_cte_node_primary_key_type', None)
@@ -196,9 +196,9 @@ class CTENodeManager(Manager):
                 self.model._cte_node_parent]))
 
         # Record the parent field attribute name for future reference.
-        setattr(self.model, '_cte_node_parent_attname',
-            self.model._meta.get_field(
-                self.model._cte_node_parent).attname)
+        setattr(
+            self.model, '_cte_node_parent_attname',
+            self.model._meta.get_field(self.model._cte_node_parent).attname)
 
         # Ensure traversal choice is valid.
         traversal_choices = [
@@ -206,14 +206,14 @@ class CTENodeManager(Manager):
         if self.model._cte_node_traversal not in traversal_choices:
             raise ImproperlyConfigured(
                 ' '.join(['CTENode._cte_node_traversal must be one of [',
-                    ', '.join(traversal_choices), ']; instead it is:',
-                    self.model._cte_node_traversal]))
+                          ', '.join(traversal_choices), ']; instead it is:',
+                          self.model._cte_node_traversal]))
 
         # Ensure delete choice is valid.
         if not hasattr(self.model, '_cte_node_delete_method') or \
                 self.model._cte_node_delete_method is None:
             setattr(self.model, '_cte_node_delete_method',
-                self.DEFAULT_DELETE_METHOD)
+                    self.DEFAULT_DELETE_METHOD)
         else:
             # Ensure specified method is valid.
             method_choices = [
@@ -221,8 +221,8 @@ class CTENodeManager(Manager):
             if self.model._cte_node_delete_method not in method_choices:
                 raise ImproperlyConfigured(
                     ' '.join(['delete method must be one of [',
-                        ', '.join(method_choices), ']; instead it is:',
-                        self.model._cte_node_delete_method]))
+                              ', '.join(method_choices), ']; instead it is:',
+                              self.model._cte_node_delete_method]))
 
         setattr(self, '_parameters_checked', True)
 
@@ -362,7 +362,7 @@ class CTENodeManager(Manager):
         # Because the compiler will include the node in question in the offset,
         # we must exclude it here.
         return CTEQuerySet(self.model, using=self._db,
-            offset=node).exclude(pk=node.pk)
+                           offset=node).exclude(pk=node.pk)
 
     def is_parent_of(self, node, subject):
         """ Returns ``True`` if the given `node` is the parent of the given
@@ -1028,7 +1028,7 @@ class CTENode(Model):
     # as it's specified through _cte_node_parent.
     _cte_node_parent = 'parent'
     parent = ForeignKey('self', on_delete=CASCADE, null=True, blank=True,
-        related_name='children')
+                        related_name='children')
 
     # This custom Manager is mandatory.
     objects = CTENodeManager()
@@ -1257,5 +1257,5 @@ class CTENode(Model):
                 should the delete method require any moves.
         """
         self.__class__.objects.prepare_delete(self, method=method,
-            position=position, save=save)
+                                              position=position, save=save)
         return super(CTENode, self).delete()

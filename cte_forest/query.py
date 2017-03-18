@@ -158,7 +158,7 @@ class CTEQuery(Query):
                 order_by_prefix = [model._cte_node_ordering]
             if chosen_traversal == CTENodeManager.TREE_TRAVERSAL_BFS:
                 order_by_prefix = [model._cte_node_depth,
-                    model._cte_node_ordering]
+                                   model._cte_node_ordering]
             # prepend correct CTE table prefix to order_by fields
             order_by = [
                 '{cte}.{field}'.format(cte=model._cte_node_table, field=field)
@@ -356,7 +356,7 @@ class CTECompiler(object):
         # since no other fields with incompatible types are combined (with a
         # notable exception of VARCHAR types which must be converted to TEXT).
         pk_path = maybe_cast((query.model._meta.pk.attname,
-            query.model._cte_node_primary_key_type))
+                              query.model._cte_node_primary_key_type))
 
         # If no explicit ordering is specified, then use the primary key. If the
         # primary key is used in ordering, and it is of a type which needs
