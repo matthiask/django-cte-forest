@@ -261,7 +261,7 @@ class CTENodeManager(Manager):
         # The CTEQuerySet uses _cte_node_* attributes from the Model, so ensure
         # they exist.
         self._ensure_parameters()
-        return CTEQuerySet(self.model, using = self._db)
+        return CTEQuerySet(self.model, using=self._db)
 
     def roots(self):
         """ Returns a :class:`QuerySet` of all root :class:`CTENode` objects.
@@ -312,7 +312,7 @@ class CTENodeManager(Manager):
         """
         # We need to use the path virtual field, so ensure it exists.
         self._ensure_virtual_fields(node)
-        return self.get(pk = getattr(node, self.model._cte_node_path)[0])
+        return self.get(pk=getattr(node, self.model._cte_node_path)[0])
 
     def siblings(self, node):
         """ Returns a :class:`QuerySet` of all siblings of a given
@@ -344,7 +344,7 @@ class CTENodeManager(Manager):
         # We need to use the path virtual field, so ensure it exists.
         self._ensure_virtual_fields(node)
         return self.filter(
-            pk__in = getattr(node, self.model._cte_node_path)[:-1])
+            pk__in=getattr(node, self.model._cte_node_path)[:-1])
 
     def descendants(self, node):
         """ Returns a :class:`QuerySet` with all descendants for a given
@@ -361,8 +361,8 @@ class CTENodeManager(Manager):
         # the offset CTENode to the custom QuerySet, which will process it.
         # Because the compiler will include the node in question in the offset,
         # we must exclude it here.
-        return CTEQuerySet(self.model, using = self._db,
-            offset = node).exclude(pk = node.pk)
+        return CTEQuerySet(self.model, using=self._db,
+            offset=node).exclude(pk=node.pk)
 
     def is_parent_of(self, node, subject):
         """ Returns ``True`` if the given `node` is the parent of the given
@@ -556,7 +556,7 @@ class CTENodeManager(Manager):
             visitor(node, attribute) or missing
         ]
 
-    def as_tree(self, visitor = None, children = None):
+    def as_tree(self, visitor=None, children=None):
         """ Recursively traverses each tree (starting from each root) in order
             to generate a dictionary-based tree structure of the entire forest.
             Each level of the forest/tree is a list of nodes, and each node
@@ -750,7 +750,7 @@ class CTENodeManager(Manager):
                 raise self.model.DoesNotExist
         return current
 
-    def prepare_delete(self, node, method, position = None, save = True):
+    def prepare_delete(self, node, method, position=None, save=True):
         """ Prepares a given :class:`CTENode` `node` for deletion, by executing
             the required deletion semantics (Pharaoh, Grandmother, or Monarchy).
 
@@ -791,7 +791,7 @@ class CTENodeManager(Manager):
         # Delegate to appropriate method.
         getattr(self, 'prepare_delete_%s' % method)(node, position, save)
 
-    def prepare_delete_pharaoh(self, node, position = None, save = True):
+    def prepare_delete_pharaoh(self, node, position=None, save=True):
         """ Prepares a given :class:`CTENode` `node` for deletion, by executing
             the :const:`DELETE_METHOD_PHARAOH` semantics.
 
@@ -810,7 +810,7 @@ class CTENodeManager(Manager):
         # Foreign Key parent relation.
         pass
 
-    def prepare_delete_grandmother(self, node, position = None, save = True):
+    def prepare_delete_grandmother(self, node, position=None, save=True):
         """ Prepares a given :class:`CTENode` `node` for deletion, by executing
             the :const:`DELETE_METHOD_GRANDMOTHER` semantics. Descendant nodes,
             if present, will be moved; in this case the optional `position` can
@@ -835,7 +835,7 @@ class CTENodeManager(Manager):
         for child in node.children.all():
             child.move(node.parent, position, save)
 
-    def prepare_delete_monarchy(self, node, position = None, save = True):
+    def prepare_delete_monarchy(self, node, position=None, save=True):
         """ Prepares a given :class:`CTENode` `node` for deletion, by executing
             the :const:`DELETE_METHOD_MONARCHY` semantics. Descendant nodes,
             if present, will be moved; in this case the optional `position` can
@@ -867,7 +867,7 @@ class CTENodeManager(Manager):
             else:
                 child.move(first, position, save)
 
-    def move(self, node, destination, position = None, save = False):
+    def move(self, node, destination, position=None, save=False):
         """ Moves the given :class:`CTENode` `node` and places it as a child
             node of the `destination` :class:`CTENode` (or makes it a root node
             if `destination` is ``None``).
@@ -1155,7 +1155,7 @@ class CTENode(Model):
         """
         return self.__class__.objects.is_branch(self)
 
-    def attribute_path(self, attribute, missing = None, visitor = None):
+    def attribute_path(self, attribute, missing=None, visitor=None):
         """ Generates a list of values of the `attribute` of all ancestors of
             this node (as well as the node itself). If a value is ``None``, then
             the optional value of `missing` is used (by default ``None``).
@@ -1183,7 +1183,7 @@ class CTENode(Model):
             _parameters['visitor'] = visitor
         return self.__class__.objects.attribute_path(**_parameters)
 
-    def as_tree(self, visitor = None, children = None):
+    def as_tree(self, visitor=None, children=None):
         """ Recursively traverses each tree (starting from each root) in order
             to generate a dictionary-based tree structure of the entire forest.
             Each level of the forest/tree is a list of nodes, and each node
@@ -1210,7 +1210,7 @@ class CTENode(Model):
             _parameters['children'] = children
         return self.__class__.objects.node_as_tree(**_parameters)
 
-    def move(self, destination = None, position = None, save = False):
+    def move(self, destination=None, position=None, save=False):
         """ Moves this node and places it as a child node of the `destination`
             :class:`CTENode` (or makes it a root node if `destination` is
             ``None``).
@@ -1238,7 +1238,7 @@ class CTENode(Model):
         """
         return self.__class__.objects.move(self, destination, position, save)
 
-    def delete(self, method = None, position = None, save = True):
+    def delete(self, method=None, position=None, save=True):
         """ Prepares the tree for deletion according to the deletion semantics
             specified for the :class:`CTENode` Model, and then delegates to the
             :class:`CTENode` superclass ``delete`` method.
@@ -1256,6 +1256,6 @@ class CTENode(Model):
                 :meth:`save` method should be invoked after each move operation,
                 should the delete method require any moves.
         """
-        self.__class__.objects.prepare_delete(self, method = method,
-            position = position, save = save)
+        self.__class__.objects.prepare_delete(self, method=method,
+            position=position, save=save)
         return super(CTENode, self).delete()

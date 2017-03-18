@@ -55,7 +55,7 @@ class CTEQuerySet(QuerySet):
     WHERE clauses.
     """
 
-    def __init__(self, model = None, query = None, using = None, offset = None, hints = None):
+    def __init__(self, model=None, query=None, using=None, offset=None, hints=None):
         """
         Prepares a CTEQuery object by adding appropriate extras, namely the
         SELECT virtual fields, the WHERE clause which matches the CTE pk with
@@ -77,7 +77,7 @@ class CTEQuerySet(QuerySet):
         # Only create an instance of a Query if this is the first invocation in
         # a query chain.
         if query is None:
-            query = CTEQuery(model, offset = offset)
+            query = CTEQuery(model, offset=offset)
         super(CTEQuerySet, self).__init__(model, query, using)
 
     def aggregate(self, *args, **kwargs):
@@ -116,7 +116,7 @@ class CTEQuery(Query):
     clauses.
     """
 
-    def __init__(self, model, where = WhereNode, offset = None):
+    def __init__(self, model, where=WhereNode, offset=None):
         """
         Delegates initialization to Django's Query, and in addition adds the
         necessary extra selects, table, and where clauses for the CTE. Depending
@@ -135,7 +135,7 @@ class CTEQuery(Query):
         :return:
         :rtype:
         """
-        super(CTEQuery, self).__init__(model, where = where)
+        super(CTEQuery, self).__init__(model, where=where)
         # import from models here to avoid circular imports.
         from .models import CTENodeManager
         if model is not None:
@@ -175,7 +175,7 @@ class CTEQuery(Query):
             # The CTE table will be added later by the Compiler only if the
             # actual query needs it.
             self.add_extra(
-                select = {
+                select={
                     model._cte_node_depth: '{cte}.{depth}'.format(
                         cte=model._cte_node_table,
                         depth=model._cte_node_depth),
@@ -199,9 +199,9 @@ class CTEQuery(Query):
                 return query.table_map[table][0]
             return table
         return '{cte}."{pk}" = {table}."{pk}"'.format(
-            cte = query.model._cte_node_table,
-            pk = query.model._meta.pk.attname,
-            table = maybe_alias(query.model._meta.db_table))
+            cte=query.model._cte_node_table,
+            pk=query.model._meta.pk.attname,
+            table=maybe_alias(query.model._meta.db_table))
 
     @classmethod
     def _remove_cte_where(cls, query):
@@ -211,7 +211,7 @@ class CTEQuery(Query):
                 if where in w.sqls:
                     query.where.children.remove(w)
 
-    def get_compiler(self, using = None, connection = None):
+    def get_compiler(self, using=None, connection=None):
         """ Overrides the Query method get_compiler in order to return
             an instance of the above custom compiler.
         """
@@ -232,7 +232,7 @@ class CTEQuery(Query):
             CTEAggregateQuery: CTEAggregateQueryCompiler,
         }.get(self.__class__, CTEQueryCompiler)(self, connection, using)
 
-    def clone(self, klass = None, memo = None, **kwargs):
+    def clone(self, klass=None, memo=None, **kwargs):
         """ Overrides Django's Query clone in order to return appropriate CTE
             compiler based on the target Query class. This mechanism is used by
             methods such as 'update' and '_update' in order to generate UPDATE

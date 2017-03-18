@@ -56,12 +56,12 @@ class NoneDeleteNode(CTENode, Model):
 
 class SimpleNodeUser(Model):
 
-    node = ForeignKey(SimpleNode, on_delete=CASCADE, null = False)
+    node = ForeignKey(SimpleNode, on_delete=CASCADE, null=False)
 
 
 class NamedNode(CTENode, Model):
 
-    name = CharField(max_length = 128, null = False)
+    name = CharField(max_length=128, null=False)
 
     class Meta(object):
 
@@ -85,9 +85,9 @@ class ValueNamedNode(NamedNode):
 
 class SimpleNamedNodeUser(Model):
 
-    node = ForeignKey(SimpleNamedNode, on_delete=CASCADE, null = False)
+    node = ForeignKey(SimpleNamedNode, on_delete=CASCADE, null=False)
 
-    name = CharField(max_length = 128, null = False)
+    name = CharField(max_length=128, null=False)
 
 
 class DFSOrderedNode(CTENode, Model):
@@ -119,7 +119,7 @@ class NoneTraversalNode(CTENode, Model):
 
 class TypeCoercionNode(CTENode, Model):
 
-    name = CharField(max_length = 128, null = False)
+    name = CharField(max_length=128, null=False)
 
     v = PositiveIntegerField()
 
@@ -155,12 +155,12 @@ class DBTypeNode(CTENode, Model):
 
 class CustomPrimaryKeyNode(CTENode, Model):
 
-    id = CharField(max_length = 128, primary_key = True)
+    id = CharField(max_length=128, primary_key=True)
 
 
 class DBTypePrimaryKeyNode(CTENode, Model):
 
-    id = UUIDField(primary_key = True, default=uuid4)
+    id = UUIDField(primary_key=True, default=uuid4)
 
 
 class AggregationNode(CTENode, Model):
