@@ -34,6 +34,7 @@
 """ Sphinx configuration for Django CTE Forest.
 """
 
+import django
 import os
 import sys
 
@@ -42,6 +43,7 @@ import sys
 # imported
 sys.path.append(os.path.abspath('../..'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cte_forest_test.settings'
+django.setup()
 
 extensions = ['sphinx.ext.autodoc']
 

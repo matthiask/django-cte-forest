@@ -601,7 +601,7 @@ class CTENodeManager(Manager):
             along with the optional `visitor` and `children` arguments. This
             method, if not overridden, will delegate to :meth:`node_as_tree`,
             which is responsible for invoking the :meth:`visitor` and
-            :meth:`children methods, as well as updating the dictionary
+            :meth:`children` methods, as well as updating the dictionary
             representation of the node with the representation of the children
             nodes.
 
