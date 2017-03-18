@@ -1,8 +1,6 @@
 include LICENSE
 include MANIFEST.in
 include README.rst
-include docs/source/conf.py
-recursive-include docs/source *.rst
 recursive-include cte_forest/static *
 recursive-include cte_forest/locale *
 recursive-include cte_forest/templates *
