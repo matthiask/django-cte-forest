@@ -1,7 +1,8 @@
-.. basic:
+.. advanced:
 
 Advanced Usage
-===========
+==============
+
 All imports are from::
 
     from cte_forest.models import ...

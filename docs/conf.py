@@ -41,7 +41,7 @@ import sys
 
 # add package root as well as dummy Django application so models can be
 # imported
-sys.path.append(os.path.abspath('../..'))
+sys.path.append(os.path.abspath('..'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cte_forest_test.settings'
 django.setup()
 
@@ -83,10 +83,13 @@ man_pages = [(
     1,
 )]
 
-texinfo_documents = [
-  ('index', 'DjangoCTEForest', u'Django CTE Forest Documentation',
-   u'Alexis Petrounias <www.petrounias.org>', 'DjangoCTEForest',
-  'Experimental implementation of Adjacency-List trees for Django'
-  ' using PostgreSQL Common Table Expressions (CTE).',
-   'Miscellaneous'),
-]
+texinfo_documents = [(
+    'index',
+    'DjangoCTEForest',
+    u'Django CTE Forest Documentation',
+    u'Alexis Petrounias <www.petrounias.org>',
+    'DjangoCTEForest',
+    'Experimental implementation of Adjacency-List trees for Django'
+    ' using PostgreSQL Common Table Expressions (CTE).',
+    'Miscellaneous',
+)]

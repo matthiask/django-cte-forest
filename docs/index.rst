@@ -1,8 +1,8 @@
-.. Django CTE Trees documentation master file
+.. Django CTE Forest documentation master file
 
 
-Django CTE Trees
-================
+Django CTE Forest
+=================
 
 Django Adjacency-List trees using PostgreSQL Common Table Expressions (CTE). Its
 aim is to completely hide the management of tree structure.
