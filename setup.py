@@ -33,20 +33,35 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
+import os
+from io import open
+
 from setuptools import setup, find_packages
 
 
+def read(filename):
+    path = os.path.join(os.path.dirname(__file__), filename)
+    with open(path, encoding='utf-8') as handle:
+        return handle.read()
+
+
 setup(
-    name = 'django-cte-forest',
-    version='0.2.1',
-    packages = find_packages(),
-    maintainer = 'Matthias Kestenholz',
-    maintainer_email = 'mk@feinheit.ch',
-    keywords = 'django, postgresql, cte, trees, sql',
-    license = 'BSD',
-    description = 'Django Adjacency-List trees using PostgreSQL Common Table Expressions (CTE).',
-    url = 'https://github.com/matthiask/django-cte-forest',
-    classifiers = [
+    name='django-cte-forest',
+    version=__import__('cte_forest').__version__,
+    description=(
+        'Django Adjacency-List trees using PostgreSQL'
+        ' Common Table Expressions (CTE).'
+    ),
+    long_description=read('README.rst'),
+    maintainer='Matthias Kestenholz',
+    maintainer_email='mk@feinheit.ch',
+    url='https://github.com/matthiask/django-cte-forest',
+    license='BSD License',
+    packages=find_packages(
+        exclude=['cte_forest_test'],
+    ),
+    include_package_data=True,
+    classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -56,5 +71,5 @@ setup(
         'Programming Language :: Python',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    zip_safe = True,
+    zip_safe=False,
 )

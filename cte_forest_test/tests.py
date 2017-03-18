@@ -34,22 +34,25 @@
 """ Unit tests for the Django CTE Trees test application.
 """
 
-__status__ = "beta"
-__version__ = "1.0.2"
-__maintainer__ = (u"Alexis Petrounias <www.petrounias.org>", )
-__author__ = (u"Alexis Petrounias <www.petrounias.org>", )
-
-# Python
 from datetime import date, timedelta
 from uuid import UUID
 
-# Django
 from django.test import TestCase
 from django.core.exceptions import ImproperlyConfigured, FieldError
 from django.db.models import F, Avg
 
-# Django CTE Trees
-from cte_forest_test.models import *
+from cte_forest_test.models import (
+    SimpleNode, NoneDeleteNode, SimpleNodeUser,
+    SimpleNamedNode, OrderedNamedNode, ValueNamedNode,
+    SimpleNamedNodeUser,
+    DFSOrderedNode, BFSOrderedNode, NoneTraversalNode,
+    TypeCoercionNode, TypeCombinationNode, ExoticTypeNode,
+    DBTypeNode, CustomPrimaryKeyNode, DBTypePrimaryKeyNode,
+    AggregationNode, BadParameter_parent_1_Node,
+    BadParameter_parent_2_Node, BadParameter_parent_3_Node,
+    BadParameter_parent_4_Node, BadParameter_traversal_Node,
+    BadParameter_delete_Node
+)
 
 
 class SimpleNodeTest(TestCase):
@@ -131,7 +134,7 @@ class SimpleNodeTest(TestCase):
 
         self.assertEqual(fresh_middle_node.depth, 2)
         self.assertEqual(fresh_middle_node.path,
-            [root_node.id,middle_node.id])
+            [root_node.id, middle_node.id])
         self.assertEqual(fresh_middle_node.ordering,
             [root_node.id, middle_node.id])
 
@@ -553,9 +556,12 @@ class SimpleNodeTest(TestCase):
         def custom_children(manager, node, visitor, children):
             if node.name == 'bottom 2':
                 return {}
-            return { 'offspring' : [ child.as_tree(
-                visitor = visitor, children = children) for child in \
-                node.children.exclude(name = 'bottom 2') ] }
+            return {'offspring': [
+                child.as_tree(
+                    visitor=visitor,
+                    children=children,
+                ) for child in node.children.exclude(name='bottom 2')
+            ]}
 
         # get the forest
         tree = OrderedNamedNode.objects.as_tree(visitor = custom_visitor,
@@ -585,7 +591,7 @@ class SimpleNodeTest(TestCase):
 
         # check empty forest (no roots, empty path)
         self.assertRaises(SimpleNamedNode.DoesNotExist,
-            lambda: SimpleNamedNode.objects.drilldown(('name',),[]))
+            lambda: SimpleNamedNode.objects.drilldown(('name', ), []))
 
         root_node = SimpleNamedNode.objects.create(name = 'root')
         middle_node = SimpleNamedNode.objects.create(parent = root_node,
@@ -599,39 +605,41 @@ class SimpleNodeTest(TestCase):
 
         # check missing path component
         self.assertRaises(SimpleNamedNode.DoesNotExist,
-            lambda: SimpleNamedNode.objects.drilldown(('name',),
-                [('root',),('xxx')]))
+            lambda: SimpleNamedNode.objects.drilldown(('name', ),
+                [('root', ), ('xxx')]))
 
         # check missing root component
         self.assertRaises(SimpleNamedNode.DoesNotExist,
-            lambda: SimpleNamedNode.objects.drilldown(('name',),
-                [('xxx',),('xxx')]))
+            lambda: SimpleNamedNode.objects.drilldown(('name', ),
+                [('xxx', ), ('xxx')]))
 
         # check success
         self.assertEqual(fresh_bottom_node, SimpleNamedNode.objects.drilldown(
-            ('name', ), [('root',), ('middle',), ('bottom',)]))
+            ('name', ), [('root', ), ('middle', ), ('bottom', )]))
 
         # check empty path success
-        self.assertEqual(fresh_root_node, SimpleNamedNode.objects.drilldown(
-                ('name', ), []))
+        self.assertEqual(
+            fresh_root_node,
+            SimpleNamedNode.objects.drilldown(('name',), []))
 
         # check extraneous path component
-        self.assertRaises(SimpleNamedNode.DoesNotExist,
+        self.assertRaises(
+            SimpleNamedNode.DoesNotExist,
             lambda: SimpleNamedNode.objects.drilldown(('name',),
-                [('root',), ('middle',), ('bottom',), ('xxx',)]))
+            [('root',), ('middle',), ('bottom',), ('xxx',)]))
 
 
     def test_tree_drilldown_complex_filtering(self):
 
         root_node = ValueNamedNode.objects.create(name = 'root', v = 5)
-        middle_node = ValueNamedNode.objects.create(parent = root_node,
-            name = 'middle', v = 5)
-        bottom_node_1 = ValueNamedNode.objects.create(parent = middle_node,
-            name = 'xxx bottom 1', v = 7)
-        bottom_node_2 = ValueNamedNode.objects.create(parent = middle_node,
-            name = 'bottom 2', v = 1)
-        bottom_node_3 = ValueNamedNode.objects.create(parent = middle_node,
-            name = 'bottom 3', v = 6)
+        middle_node = ValueNamedNode.objects.create(
+            parent=root_node, name='middle', v=5)
+        bottom_node_1 = ValueNamedNode.objects.create(
+            parent=middle_node, name='xxx bottom 1', v=7)
+        bottom_node_2 = ValueNamedNode.objects.create(
+            parent=middle_node, name='bottom 2', v = 1)
+        bottom_node_3 = ValueNamedNode.objects.create(
+            parent=middle_node, name = 'bottom 3', v = 6)
 
         fresh_root_node = ValueNamedNode.objects.get(name = 'root')
         fresh_middle_node = ValueNamedNode.objects.get(name = 'middle')
@@ -678,7 +686,7 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(len(root_node.children.all()), 3)
         self.assertEqual(root_node.children.count(), 3)
         self.assertEqual([node.depth for node in root_node.children.all()],
-            [2,2,2])
+            [2, 2, 2])
 
 
     def test_node_delete_monarchy(self):
@@ -700,12 +708,12 @@ class SimpleNodeTest(TestCase):
              bottom_node_3.id])
         self.assertEqual(len(root_node.children.all()), 1)
         self.assertEqual(root_node.children.count(), 1)
-        self.assertEqual([node.depth for node in root_node.children.all()],[2])
+        self.assertEqual([node.depth for node in root_node.children.all()], [2])
 
         self.assertEqual(fresh_bottom_node_1.depth, 2)
         self.assertEqual(fresh_bottom_node_1.children.count(), 2)
         self.assertEqual(len(fresh_bottom_node_1.children.all()), 2)
-        self.assertEqual([3,3],
+        self.assertEqual([3, 3],
             [node.depth for node in fresh_bottom_node_1.children.all()])
 
 
@@ -790,7 +798,8 @@ class SimpleNodeErrorsTest(TestCase):
 
         root_node = SimpleNode.objects.create()
 
-        read_path = lambda node: node.path
+        def read_path(node):
+            return node.path
 
         self.assertRaises(AttributeError, read_path, root_node)
         self.assertRaises(FieldError, root_node.ancestors)
@@ -858,7 +867,8 @@ class SimpleNamedNodeTest(TestCase):
             ['root', 'middle', 'bottom 2', 'bottom 3', 'bottom 1'])
 
         # But if we override ordering, we can get back to flat name space.
-        flat_node_names = [node.name for node in \
+        flat_node_names = [
+            node.name for node in
             SimpleNamedNode.objects.all().order_by('name')]
         self.assertEqual(flat_node_names,
             ['bottom 1', 'bottom 2', 'bottom 3', 'middle', 'root'])
@@ -912,7 +922,8 @@ class OrderedNamedNodeTest(TestCase):
             node_names)
 
         # But if we override ordering, we can get back to flat name space.
-        flat_node_names = [node.name for node in \
+        flat_node_names = [
+            node.name for node in
             OrderedNamedNode.objects.all().order_by('name')]
         self.assertEqual(['bottom 1', 'bottom 2', 'bottom 3', 'middle', 'root'],
             flat_node_names)
@@ -1091,25 +1102,25 @@ class ExoticTypeNodeTest(TestCase):
 
     def test_exotic_type(self):
 
-        root_node = ExoticTypeNode.objects.create(v = date(1982,9,26))
+        root_node = ExoticTypeNode.objects.create(v = date(1982, 9, 26))
         # The following two have different v values, but created in the
         # opposite order from which we are ordering.
         middle_node_1 = ExoticTypeNode.objects.create(parent = root_node,
-            v = date(2006,7,7))
+            v = date(2006, 7, 7))
         middle_node_2 = ExoticTypeNode.objects.create(parent = root_node,
-            v = date(1946,1,6))
+            v = date(1946, 1, 6))
 
         # The following two have the same v value.
         bottom_node_1_1 = ExoticTypeNode.objects.create(
-            parent = middle_node_1, v = date(1924,11,20))
+            parent = middle_node_1, v = date(1924, 11, 20))
         bottom_node_1_2 = ExoticTypeNode.objects.create(
-            parent = middle_node_1, v = date(1924,11,20))
+            parent = middle_node_1, v = date(1924, 11, 20))
 
         # The following have different v values, but created in 'reverse' order.
         bottom_node_2_1 = ExoticTypeNode.objects.create(
-            parent = middle_node_2, v = date(1987,10,20))
+            parent = middle_node_2, v = date(1987, 10, 20))
         bottom_node_2_2 = ExoticTypeNode.objects.create(
-            parent = middle_node_2, v = date(1903,4,25))
+            parent = middle_node_2, v = date(1903, 4, 25))
 
         expected_order = [root_node.id, middle_node_2.id, bottom_node_2_2.id,
             bottom_node_2_1.id, middle_node_1.id, bottom_node_1_1.id,
@@ -1121,10 +1132,10 @@ class ExoticTypeNodeTest(TestCase):
 
     def test_date_query(self):
 
-        node1 = ExoticTypeNode.objects.create(v = date(1982,9,26),
-            y = date(1982,9,29))
-        node2 = ExoticTypeNode.objects.create(v = date(1982,9,26),
-            y = date(1982,9,30))
+        node1 = ExoticTypeNode.objects.create(v = date(1982, 9, 26),
+            y = date(1982, 9, 29))
+        node2 = ExoticTypeNode.objects.create(v = date(1982, 9, 26),
+            y = date(1982, 9, 30))
 
         self.assertEqual(list(ExoticTypeNode.objects.filter(
             y__gt = F('v') + timedelta(days = 3))), [node2])

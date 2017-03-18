@@ -34,18 +34,11 @@
 """ Models for the Django CTE Trees test application.
 """
 
-__status__ = "beta"
-__version__ = "1.0.2"
-__maintainer__ = (u"Alexis Petrounias <www.petrounias.org>", )
-__author__ = (u"Alexis Petrounias <www.petrounias.org>", )
-
 from uuid import uuid4
 
-# Django
 from django.db.models import Model, ForeignKey, CharField, FloatField, \
     PositiveIntegerField, DateField, UUIDField, CASCADE
 
-# Django CTE Trees
 from cte_forest.models import CTENode, CTENodeManager
 
 
@@ -91,13 +84,6 @@ class ValueNamedNode(NamedNode):
 class SimpleNamedNodeUser(Model):
 
     node = ForeignKey(SimpleNamedNode, on_delete=CASCADE, null = False)
-
-    name = CharField(max_length = 128, null = False)
-
-
-class OrderedNamedNodeUser(Model):
-
-    node = ForeignKey(OrderedNamedNode, on_delete=CASCADE, null = False)
 
     name = CharField(max_length = 128, null = False)
 
@@ -153,7 +139,7 @@ class ExoticTypeNode(CTENode, Model):
 
     v = DateField()
 
-    y = DateField(null = True)
+    y = DateField(null=True)
 
     _cte_node_order_by = ['v']
 
@@ -193,7 +179,7 @@ class ArbitraryNode(CTENode, Model):
 class BadParameter_parent_2_Node(CTENode, Model):
 
 
-    wrong = ForeignKey(ArbitraryNode, on_delete=CASCADE, null = True)
+    wrong = ForeignKey(ArbitraryNode, on_delete=CASCADE, null=True)
 
     _cte_node_parent = 'wrong'
 
@@ -205,7 +191,7 @@ class ArbitraryModel(Model):
 
 class BadParameter_parent_3_Node(CTENode, Model):
 
-    wrong = ForeignKey(ArbitraryModel, on_delete=CASCADE, null = True)
+    wrong = ForeignKey(ArbitraryModel, on_delete=CASCADE, null=True)
 
     _cte_node_parent = 'wrong'
 
@@ -223,4 +209,3 @@ class BadParameter_traversal_Node(CTENode, Model):
 class BadParameter_delete_Node(CTENode, Model):
 
     _cte_node_delete_method = 'wrong'
-

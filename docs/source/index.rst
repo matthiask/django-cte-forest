@@ -72,18 +72,18 @@ Core:
 - PostgreSQL >= 8.4
 - Python >= 2.7, >= 3.4
 - psycopg2 >= 2.4
-- Django >= 1.8
+- Django >= 1.10
 
 
 =========
 Obtaining
 =========
 
-- Author's website for the project: http://www.petrounias.org/software/django-cte-trees/
+- Original author's website for the project: http://www.petrounias.org/software/django-cte-trees/
 
-- Git repository on GitHub: https://github.com/petrounias/django-cte-trees/
+- Git repository on GitHub: https://github.com/matthiask/django-cte-forest/
 
-- Mercurial repository on BitBucket: http://www.bitbucket.org/petrounias/django-cte-trees/
+- PyPI: https://pypi.python.org/pypi/django-cte-forest
 
 
 ============
@@ -96,7 +96,7 @@ Via setup tools::
 
 Via pip and pypi::
 
-    pip install django-cte-trees
+    pip install django-cte-forest
 
 
 Include the cte_forest module as an application in your Django project through the
@@ -209,4 +209,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

@@ -35,11 +35,5 @@
     implementation of of Adjacency-Linked trees.
 """
 
-__status__ = "beta"
-__version__ = "1.0.2"
-__maintainer__ = (u"Alexis Petrounias <www.petrounias.org>", )
-__author__ = (u"Alexis Petrounias <www.petrounias.org>", )
-
-
-VERSION = (1, 0, 2)
-
+VERSION = (0, 2, 1)
+__version__ = '.'.join(map(str, VERSION))

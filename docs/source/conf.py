@@ -31,19 +31,15 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-""" Sphinx configuration for Django CTE Trees.
+""" Sphinx configuration for Django CTE Forest.
 """
 
-__status__ = "beta"
-__version__ = "1.0.2"
-__maintainer__ = (u"Alexis Petrounias <www.petrounias.org>", )
-__author__ = (u"Alexis Petrounias <www.petrounias.org>", )
-
-# Python
-import sys, os
+import os
+import sys
 
 
-# add package root as well as dummy Django application so models can be imported
+# add package root as well as dummy Django application so models can be
+# imported
 sys.path.append(os.path.abspath('../..'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cte_forest_test.settings'
 
@@ -55,11 +51,11 @@ source_suffix = '.rst'
 
 master_doc = 'index'
 
-project = u'Django CTE Trees'
+project = u'Django CTE Forest'
 copyright = u'2011 - 2013 Alexis Petrounias <www.petrounias.org>'
 
-version = '1.0.2'
-release = '1.0.2'
+version = __import__('cte_forest').__version__
+release = version
 
 pygments_style = 'sphinx'
 
@@ -67,21 +63,28 @@ html_theme = 'default'
 
 html_static_path = ['_static']
 
-htmlhelp_basename = 'DjangoCTETreesdoc'
+htmlhelp_basename = 'DjangoCTEForestdoc'
 
-latex_documents = [
-  ('index', 'DjangoCTETrees.tex', u'Django CTE Trees Documentation',
-   u'Alexis Petrounias \\textless{}www.petrounias.org\\textgreater{}', 'manual'),
-]
+latex_documents = [(
+    'index',
+    'DjangoCTEForest.tex',
+    u'Django CTE Forest Documentation',
+    u'Alexis Petrounias \\textless{}www.petrounias.org\\textgreater{}',
+    'manual',
+)]
 
-man_pages = [
-    ('index', 'djangoctetrees', u'Django CTE Trees Documentation',
-     [u'Alexis Petrounias <www.petrounias.org>'], 1)
-]
+man_pages = [(
+    'index',
+    'djangocteforest',
+    u'Django CTE Forest Documentation',
+    [u'Alexis Petrounias <www.petrounias.org>'],
+    1,
+)]
 
 texinfo_documents = [
-  ('index', 'DjangoCTETrees', u'Django CTE Trees Documentation',
-   u'Alexis Petrounias <www.petrounias.org>', 'DjangoCTETrees',
-  'Experimental implementation of Adjacency-List trees for Django using PostgreSQL Common Table Expressions (CTE).',
+  ('index', 'DjangoCTEForest', u'Django CTE Forest Documentation',
+   u'Alexis Petrounias <www.petrounias.org>', 'DjangoCTEForest',
+  'Experimental implementation of Adjacency-List trees for Django'
+  ' using PostgreSQL Common Table Expressions (CTE).',
    'Miscellaneous'),
 ]

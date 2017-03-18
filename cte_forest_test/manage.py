@@ -35,11 +35,6 @@
 """ Dummy Django application settings so unittest and Sphinx autodoc can work.
 """
 
-__status__ = "beta"
-__version__ = "1.0.2"
-__maintainer__ = (u"Alexis Petrounias <www.petrounias.org>", )
-__author__ = (u"Alexis Petrounias <www.petrounias.org>", )
-
 # Python
 import os
 import sys

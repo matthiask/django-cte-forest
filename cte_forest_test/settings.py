@@ -34,16 +34,14 @@
 """ Dummy Django application settings so unittest and Sphinx autodoc can work.
 """
 
-__status__ = "beta"
-__version__ = "1.0.2"
-__maintainer__ = (u"Alexis Petrounias <www.petrounias.org>", )
-__author__ = (u"Alexis Petrounias <www.petrounias.org>", )
-
 DEBUG = True
 
 SECRET_KEY = 'dummy'
 
-INSTALLED_APPS = ('cte_forest', 'cte_forest_test', )
+INSTALLED_APPS = (
+    'cte_forest',
+    'cte_forest_test',
+)
 
 DATABASES = {
     'default': {
