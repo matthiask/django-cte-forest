@@ -63,7 +63,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(len(SimpleNode.objects.filter()), 1)
         self.assertEqual(SimpleNode.objects.count(), 1)
 
-
     def test_node_creation_save(self):
 
         node = SimpleNode()
@@ -74,7 +73,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(len(SimpleNode.objects.filter()), 1)
         self.assertEqual(SimpleNode.objects.count(), 1)
 
-
     def test_multiple_node_creation(self):
 
         node_1 = SimpleNode.objects.create()
@@ -82,7 +80,6 @@ class SimpleNodeTest(TestCase):
 
         self.assertEqual(len(SimpleNode.objects.filter()), 2)
         self.assertEqual(SimpleNode.objects.count(), 2)
-
 
     def test_node_save(self):
 
@@ -94,7 +91,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(len(SimpleNode.objects.filter()), 1)
         self.assertEqual(SimpleNode.objects.count(), 1)
 
-
     def test_node_delete(self):
 
         node = SimpleNode.objects.create()
@@ -104,7 +100,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(len(SimpleNode.objects.filter()), 0)
         self.assertEqual(SimpleNode.objects.count(), 0)
 
-
     def test_node_delete_query(self):
 
         node = SimpleNode.objects.create()
@@ -113,7 +108,6 @@ class SimpleNodeTest(TestCase):
 
         self.assertEqual(len(SimpleNode.objects.filter()), 0)
         self.assertEqual(SimpleNode.objects.count(), 0)
-
 
     def test_tree_structure(self):
 
@@ -141,7 +135,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(fresh_bottom_node.ordering,
             [root_node.id, middle_node.id, bottom_node.id])
 
-
     def test_node_roots(self):
 
         root_node_1 = SimpleNode.objects.create()
@@ -156,7 +149,6 @@ class SimpleNodeTest(TestCase):
         for node in SimpleNode.objects.roots():
             self.assertTrue(node.pk in root_node_pks)
 
-
     def test_tree_structure_leaves(self):
 
         root_node = SimpleNode.objects.create()
@@ -167,7 +159,6 @@ class SimpleNodeTest(TestCase):
 
         self.assertEqual([bottom_node_1.id, bottom_node_2.id, bottom_node_3.id],
             [node.id for node in SimpleNode.objects.leaves()])
-
 
     def test_tree_structure_branches(self):
 
@@ -181,7 +172,6 @@ class SimpleNodeTest(TestCase):
             {root_node.id, middle_node.id},
             {node.id for node in SimpleNode.objects.branches()})
 
-
     def test_tree_structure_parent(self):
 
         root_node = SimpleNode.objects.create()
@@ -192,7 +182,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(middle_node.parent.id, root_node.id)
         self.assertEqual(bottom_node.parent.id, middle_node.id)
         self.assertEqual(bottom_node.parent.parent.id, root_node.id)
-
 
     def test_tree_structure_children(self):
 
@@ -208,7 +197,6 @@ class SimpleNodeTest(TestCase):
             [bottom_node_1.pk, bottom_node_2.pk, bottom_node_3.pk])
 
         self.assertEqual(len(bottom_node_1.children.all()), 0)
-
 
     def test_tree_structure_siblings(self):
 
@@ -231,7 +219,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(bottom_node_2_1.siblings()[0].id, bottom_node_2_2.id)
         self.assertEqual(bottom_node_2_2.siblings()[0].id, bottom_node_2_1.id)
 
-
     def test_tree_structure_descendants(self):
 
         root_node = SimpleNode.objects.create()
@@ -248,7 +235,6 @@ class SimpleNodeTest(TestCase):
             [bottom_node_1.pk, bottom_node_2.pk, bottom_node_3.pk])
 
         self.assertEqual(len(bottom_node_1.descendants()), 0)
-
 
     def test_tree_structure_ancestors(self):
 
@@ -268,7 +254,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual([node.pk for node in fresh_bottom_node.ancestors()],
             [root_node.id, middle_node.id])
 
-
     def test_tree_structure_root(self):
 
         root_node = SimpleNode.objects.create()
@@ -283,7 +268,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(fresh_middle_node.root().id, root_node.id)
         self.assertEqual(fresh_bottom_node.root().id, root_node.id)
 
-
     def test_tree_structure_intersection(self):
 
         root_node = SimpleNode.objects.create()
@@ -297,7 +281,6 @@ class SimpleNodeTest(TestCase):
         q = fresh_bottom_node_2.ancestors() & root_node.descendants()
         self.assertEqual(middle_node.id, q[0].id)
 
-
     def test_tree_structure_is_child_of(self):
 
         root_node = SimpleNode.objects.create()
@@ -309,7 +292,6 @@ class SimpleNodeTest(TestCase):
         self.assertTrue(middle_node.is_child_of(root_node))
         self.assertFalse(bottom_node_1.is_child_of(root_node))
 
-
     def test_tree_structure_is_parent_of(self):
 
         root_node = SimpleNode.objects.create()
@@ -320,7 +302,6 @@ class SimpleNodeTest(TestCase):
 
         self.assertTrue(root_node.is_parent_of(middle_node))
         self.assertFalse(root_node.is_parent_of(bottom_node_1))
-
 
     def test_tree_structure_is_sibling_of(self):
 
@@ -343,7 +324,6 @@ class SimpleNodeTest(TestCase):
         # Ensure edge case when compared to self.
         self.assertFalse(bottom_node_1.is_sibling_of(bottom_node_1))
         self.assertFalse(middle_node.is_sibling_of(middle_node))
-
 
     def test_tree_structure_is_descendant_of(self):
 
@@ -368,7 +348,6 @@ class SimpleNodeTest(TestCase):
         self.assertFalse(fresh_middle_node.is_descendant_of(fresh_middle_node))
         self.assertFalse(fresh_bottom_node.is_descendant_of(fresh_bottom_node))
 
-
     def test_tree_structure_is_descendant_of_none(self):
 
         root_node = SimpleNode.objects.create()
@@ -380,7 +359,6 @@ class SimpleNodeTest(TestCase):
         self.assertTrue(fresh_middle_node.is_descendant_of(fresh_root_node))
 
         self.assertFalse(fresh_middle_node.is_descendant_of(None))
-
 
     def test_tree_structure_is_ancestor_of(self):
 
@@ -405,7 +383,6 @@ class SimpleNodeTest(TestCase):
         self.assertFalse(fresh_middle_node.is_ancestor_of(fresh_middle_node))
         self.assertFalse(fresh_bottom_node.is_ancestor_of(fresh_bottom_node))
 
-
     def test_tree_structure_is_ancestor_of_none(self):
 
         root_node = SimpleNode.objects.create()
@@ -416,7 +393,6 @@ class SimpleNodeTest(TestCase):
 
         self.assertTrue(fresh_root_node.is_ancestor_of(fresh_middle_node))
         self.assertFalse(fresh_root_node.is_ancestor_of(None))
-
 
     def test_tree_structure_is_leaf(self):
 
@@ -432,7 +408,6 @@ class SimpleNodeTest(TestCase):
         self.assertTrue(bottom_node_2.is_leaf())
         self.assertTrue(bottom_node_3.is_leaf())
 
-
     def test_tree_structure_is_branch(self):
 
         root_node = SimpleNode.objects.create()
@@ -446,7 +421,6 @@ class SimpleNodeTest(TestCase):
         self.assertFalse(bottom_node_1.is_branch())
         self.assertFalse(bottom_node_2.is_branch())
         self.assertFalse(bottom_node_3.is_branch())
-
 
     def test_tree_attribute_path(self):
 
@@ -480,7 +454,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(['root', 'foo', 'bar', ],
             fresh_bottom_node.attribute_path('name', missing = 'bar',
                 visitor = custom_visitor))
-
 
     def test_tree_structure_as_tree(self):
 
@@ -522,7 +495,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(len(middle_tree['children']), 3)
         self.assertEqual(middle_tree['children'][1]['node'].id,
             fresh_bottom_node_2.id)
-
 
     def test_tree_structure_as_tree_custom(self):
 
@@ -583,7 +555,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(middle_tree['offspring'][1]['person'].id,
             fresh_bottom_node_3.id)
 
-
     def test_tree_drilldown(self):
 
         # check empty forest (no roots, empty path)
@@ -625,7 +596,6 @@ class SimpleNodeTest(TestCase):
             lambda: SimpleNamedNode.objects.drilldown(('name',),
             [('root',), ('middle',), ('bottom',), ('xxx',)]))
 
-
     def test_tree_drilldown_complex_filtering(self):
 
         root_node = ValueNamedNode.objects.create(name = 'root', v = 5)
@@ -648,7 +618,6 @@ class SimpleNodeTest(TestCase):
             ('name__startswith', 'v__gte'),
             [('root', 5), ('middle', 5), ('bottom', 5)]))
 
-
     def test_node_delete_pharaoh(self):
 
         root_node = SimpleNode.objects.create()
@@ -662,7 +631,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(len(SimpleNode.objects.all()), 1)
         self.assertEqual(SimpleNode.objects.count(), 1)
         self.assertEqual(SimpleNode.objects.get().id, root_node.id)
-
 
     def test_node_delete_grandmother(self):
 
@@ -684,7 +652,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(root_node.children.count(), 3)
         self.assertEqual([node.depth for node in root_node.children.all()],
             [2, 2, 2])
-
 
     def test_node_delete_monarchy(self):
 
@@ -713,7 +680,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual([3, 3],
             [node.depth for node in fresh_bottom_node_1.children.all()])
 
-
     def test_node_delete_none(self):
 
         root_node = NoneDeleteNode.objects.create()
@@ -727,7 +693,6 @@ class SimpleNodeTest(TestCase):
         self.assertEqual(len(NoneDeleteNode.objects.all()), 1)
         self.assertEqual(NoneDeleteNode.objects.count(), 1)
         self.assertEqual(NoneDeleteNode.objects.get().id, root_node.id)
-
 
     def test_node_move(self):
 
@@ -757,13 +722,11 @@ class SimpleNodeErrorsTest(TestCase):
         self.assertRaises(ImproperlyConfigured,
             BadParameter_parent_1_Node.objects.create)
 
-
     def test_node_parameters_parent_2(self):
 
         # Parent Foreign Key points to different CTENode Model.
         self.assertRaises(ImproperlyConfigured,
             BadParameter_parent_2_Node.objects.create)
-
 
     def test_node_parameters_parent_3(self):
 
@@ -771,25 +734,21 @@ class SimpleNodeErrorsTest(TestCase):
         self.assertRaises(ImproperlyConfigured,
             BadParameter_parent_3_Node.objects.create)
 
-
     def test_node_parameters_parent_4(self):
 
         # Parent Foreign Key missing.
         self.assertRaises(ImproperlyConfigured,
             BadParameter_parent_4_Node.objects.create)
 
-
     def test_node_parameters_traversal(self):
 
         self.assertRaises(ImproperlyConfigured,
             BadParameter_traversal_Node.objects.create)
 
-
     def test_node_parameters_delete(self):
 
         self.assertRaises(ImproperlyConfigured,
             BadParameter_delete_Node.objects.create)
-
 
     def test_node_virtual_fields(self):
 
@@ -825,7 +784,6 @@ class SimpleNamedNodeTest(TestCase):
 
         self.assertEqual(SimpleNamedNode.objects.get().name, node.name)
 
-
     def test_user_creation(self):
 
         node = SimpleNamedNode.objects.create(name = 'root')
@@ -834,7 +792,6 @@ class SimpleNamedNodeTest(TestCase):
 
         self.assertEqual(user.node.name, 'root')
 
-
     def test_node_save(self):
 
         node = SimpleNamedNode.objects.create(name = 'amazing')
@@ -842,7 +799,6 @@ class SimpleNamedNodeTest(TestCase):
         node.name = 'so and so'
         node.save()
         self.assertEqual(SimpleNamedNode.objects.get().name, 'so and so')
-
 
     def test_ordering(self):
 
@@ -870,7 +826,6 @@ class SimpleNamedNodeTest(TestCase):
         self.assertEqual(flat_node_names,
             ['bottom 1', 'bottom 2', 'bottom 3', 'middle', 'root'])
 
-
     def test_node_filter_chaining(self):
 
         root_node = SimpleNamedNode.objects.create(name = 'root')
@@ -897,7 +852,6 @@ class OrderedNamedNodeTest(TestCase):
         fresh_node = OrderedNamedNode.objects.get()
 
         self.assertEqual(fresh_node.ordering, [node.name])
-
 
     def test_simple_ordering(self):
 
@@ -1126,7 +1080,6 @@ class ExoticTypeNodeTest(TestCase):
         self.assertEqual(expected_order,
             [node.id for node in ExoticTypeNode.objects.all()])
 
-
     def test_date_query(self):
 
         node1 = ExoticTypeNode.objects.create(v = date(1982, 9, 26),
@@ -1161,7 +1114,6 @@ class DBTypeNodeTest(TestCase):
         UUID('78e66b6f-f59c-42df-b20e-ea9855329bea')
     ]
 
-
     def test_ensure_sorted_uuids(self):
 
         previous = None
@@ -1170,7 +1122,6 @@ class DBTypeNodeTest(TestCase):
                 previous = u
             else:
                 self.assertTrue(previous < u)
-
 
     def test_db_type(self):
 
@@ -1201,7 +1152,6 @@ class DBTypeNodeTest(TestCase):
         self.assertEqual(expected_order,
             [node.id for node in DBTypeNode.objects.all()])
 
-
     def test_db_type_path(self):
 
         root_node = DBTypeNode.objects.create(v = self.sorted_uuids[0])
@@ -1215,7 +1165,6 @@ class DBTypeNodeTest(TestCase):
         fresh_middle_node_1 = DBTypeNode.objects.get(id = middle_node_1.id)
 
         self.assertEqual(fresh_middle_node_1.ancestors()[0], root_node)
-
 
     def test_tree_structure_is_child_of(self):
 
@@ -1255,7 +1204,6 @@ class CustomPrimaryKeyNodeTest(TestCase):
 
         self.assertTrue(fresh_middle_node.is_child_of(root_node))
         self.assertFalse(fresh_bottom_node_1.is_child_of(root_node))
-
 
     def test_tree_structure_is_descendant_of(self):
 
@@ -1310,7 +1258,6 @@ class DBTypePrimaryKeyNodeTest(TestCase):
         self.assertTrue(fresh_middle_node.is_child_of(root_node))
         self.assertFalse(fresh_bottom_node_1.is_child_of(root_node))
 
-
     def test_tree_structure_is_ancestor_of(self):
 
         # Ensure string-based path encoding works.
@@ -1337,7 +1284,6 @@ class DBTypePrimaryKeyNodeTest(TestCase):
         self.assertFalse(fresh_root_node.is_ancestor_of(fresh_root_node))
         self.assertFalse(fresh_middle_node.is_ancestor_of(fresh_middle_node))
         self.assertFalse(fresh_bottom_node.is_ancestor_of(fresh_bottom_node))
-
 
     def test_tree_structure_is_descendant_of(self):
 

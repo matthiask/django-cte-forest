@@ -180,7 +180,6 @@ class ArbitraryNode(CTENode, Model):
 
 class BadParameter_parent_2_Node(CTENode, Model):
 
-
     wrong = ForeignKey(ArbitraryNode, on_delete=CASCADE, null=True)
 
     _cte_node_parent = 'wrong'

@@ -118,7 +118,6 @@ class CTENodeManager(Manager):
     use_for_related_fields = True
     silence_use_for_related_fields_deprecation = True
 
-
     def _ensure_parameters(self):
         """ Attempts to load and verify the CTE node parameters. Will use
             default values for all missing parameters, and raise an exception if
@@ -227,7 +226,6 @@ class CTENodeManager(Manager):
 
         setattr(self, '_parameters_checked', True)
 
-
     def _ensure_virtual_fields(self, node):
         """ Attempts to read the virtual fields from the given `node` in order
             to ensure they exist, resulting in an early :class:`AttributeError`
@@ -250,7 +248,6 @@ class CTENodeManager(Manager):
                     _('CTENode objects must be loaded from the database before '
                       'they can be used.'))
 
-
     def get_queryset(self):
         """ Returns a custom :class:`QuerySet` which provides the CTE
             functionality for all queries concerning :class:`CTENode` objects.
@@ -266,7 +263,6 @@ class CTENodeManager(Manager):
         self._ensure_parameters()
         return CTEQuerySet(self.model, using = self._db)
 
-
     def roots(self):
         """ Returns a :class:`QuerySet` of all root :class:`CTENode` objects.
 
@@ -276,7 +272,6 @@ class CTENodeManager(Manager):
         self._ensure_parameters()
         # We need to construct: self.filter(parent = None)
         return self.filter(**{self.model._cte_node_parent: None})
-
 
     def leaves(self):
         """ Returns a :class:`QuerySet` of all leaf nodes (nodes with no
@@ -291,7 +286,6 @@ class CTENodeManager(Manager):
             '%s__id__in' % self.model._cte_node_children: self.all(),
         })
 
-
     def branches(self):
         """ Returns a :class:`QuerySet` of all branch nodes (nodes with at least
             one child).
@@ -304,7 +298,6 @@ class CTENodeManager(Manager):
         return self.filter(**{
             '%s__id__in' % self.model._cte_node_children: self.all(),
         }).distinct()
-
 
     def root(self, node):
         """ Returns the :class:`CTENode` which is the root of the tree in which
@@ -320,7 +313,6 @@ class CTENodeManager(Manager):
         # We need to use the path virtual field, so ensure it exists.
         self._ensure_virtual_fields(node)
         return self.get(pk = getattr(node, self.model._cte_node_path)[0])
-
 
     def siblings(self, node):
         """ Returns a :class:`QuerySet` of all siblings of a given
@@ -341,7 +333,6 @@ class CTENodeManager(Manager):
             ),
         }).exclude(id=node.id)
 
-
     def ancestors(self, node):
         """ Returns a :class:`QuerySet` of all ancestors of a given
             :class:`CTENode` `node`.
@@ -354,7 +345,6 @@ class CTENodeManager(Manager):
         self._ensure_virtual_fields(node)
         return self.filter(
             pk__in = getattr(node, self.model._cte_node_path)[:-1])
-
 
     def descendants(self, node):
         """ Returns a :class:`QuerySet` with all descendants for a given
@@ -374,7 +364,6 @@ class CTENodeManager(Manager):
         return CTEQuerySet(self.model, using = self._db,
             offset = node).exclude(pk = node.pk)
 
-
     def is_parent_of(self, node, subject):
         """ Returns ``True`` if the given `node` is the parent of the given
             `subject` node, ``False`` otherwise. This method uses the
@@ -390,7 +379,6 @@ class CTENodeManager(Manager):
                 otherwise.
         """
         return subject.parent_id == node.id
-
 
     def is_child_of(self, node, subject):
         """ Returns ``True`` if the given `node` is a child of the given
@@ -408,7 +396,6 @@ class CTENodeManager(Manager):
         """
         return node.parent_id == subject.id
 
-
     def is_sibling_of(self, node, subject):
         """ Returns ``True`` if the given `node` is a sibling of the given
             `subject` node, ``False`` otherwise. This method uses the
@@ -425,7 +412,6 @@ class CTENodeManager(Manager):
         """
         # Ensure nodes are not siblings of themselves.
         return not node.id == subject.id and node.parent_id == subject.parent_id
-
 
     def is_ancestor_of(self, node, subject):
         """ Returns ``True`` if the given `node` is an ancestor of the given
@@ -470,7 +456,6 @@ class CTENodeManager(Manager):
             return getattr(subject, subject._cte_node_path)[:-len(str(subject.id)) - 2].index(
                 str(node.id)) > 0
 
-
     def is_descendant_of(self, node, subject):
         """ Returns ``True`` if the given `node` is a descendant of the given
             `subject` node, ``False`` otherwise. This method uses the
@@ -514,7 +499,6 @@ class CTENodeManager(Manager):
             _path = getattr(node, node._cte_node_path)
             return _path[:-len(str(node.id)) - 2].index(str(subject.id)) > 0
 
-
     def is_leaf(self, node):
         """ Returns ``True`` if the given `node` is a leaf (has no children),
             ``False`` otherwise.
@@ -526,7 +510,6 @@ class CTENodeManager(Manager):
         """
         return not node.children.exists()
 
-
     def is_branch(self, node):
         """ Returns ``True`` if the given `node` is a branch (has at least one
             child), ``False`` otherwise.
@@ -537,7 +520,6 @@ class CTENodeManager(Manager):
             :return: ``True`` if `node` is a branch, ``False`` otherwise.
         """
         return node.children.exists()
-
 
     def attribute_path(
         self, node, attribute, missing=None,
@@ -573,7 +555,6 @@ class CTENodeManager(Manager):
         ] + [
             visitor(node, attribute) or missing
         ]
-
 
     def as_tree(self, visitor = None, children = None):
         """ Recursively traverses each tree (starting from each root) in order
@@ -619,7 +600,6 @@ class CTENodeManager(Manager):
             for root in self.roots()
         ]
 
-
     def node_as_tree(
         self,
         node,
@@ -648,7 +628,6 @@ class CTENodeManager(Manager):
         tree.update(children(self, node, visitor, children))
         return tree
 
-
     def _default_node_visitor(self, node):
         """ Generates a dictionary representation of the given :class:`CTENode`
         `node`, which consists of the node itself under the key ``node``, as
@@ -668,7 +647,6 @@ class CTENodeManager(Manager):
             'branch': node.is_branch(),
             'node': node,
         }
-
 
     def _default_node_children(self, node, visitor, children):
         """ Generates a key and list of children of the given :class:`CTENode`
@@ -702,7 +680,6 @@ class CTENodeManager(Manager):
                 ) for child in node.children.all()
             ],
         }
-
 
     def drilldown(self, attributes, path):
         """ Recursively descends the tree/forest (starting from each root node)
@@ -773,7 +750,6 @@ class CTENodeManager(Manager):
                 raise self.model.DoesNotExist
         return current
 
-
     def prepare_delete(self, node, method, position = None, save = True):
         """ Prepares a given :class:`CTENode` `node` for deletion, by executing
             the required deletion semantics (Pharaoh, Grandmother, or Monarchy).
@@ -815,7 +791,6 @@ class CTENodeManager(Manager):
         # Delegate to appropriate method.
         getattr(self, 'prepare_delete_%s' % method)(node, position, save)
 
-
     def prepare_delete_pharaoh(self, node, position = None, save = True):
         """ Prepares a given :class:`CTENode` `node` for deletion, by executing
             the :const:`DELETE_METHOD_PHARAOH` semantics.
@@ -834,7 +809,6 @@ class CTENodeManager(Manager):
         # Django will take care of deleting the sub-tree through the reverse
         # Foreign Key parent relation.
         pass
-
 
     def prepare_delete_grandmother(self, node, position = None, save = True):
         """ Prepares a given :class:`CTENode` `node` for deletion, by executing
@@ -860,7 +834,6 @@ class CTENodeManager(Manager):
         # Move all children to the node's parent.
         for child in node.children.all():
             child.move(node.parent, position, save)
-
 
     def prepare_delete_monarchy(self, node, position = None, save = True):
         """ Prepares a given :class:`CTENode` `node` for deletion, by executing
@@ -893,7 +866,6 @@ class CTENodeManager(Manager):
                 first.move(node.parent, position, save)
             else:
                 child.move(first, position, save)
-
 
     def move(self, node, destination, position = None, save = False):
         """ Moves the given :class:`CTENode` `node` and places it as a child
@@ -1061,6 +1033,11 @@ class CTENode(Model):
     # This custom Manager is mandatory.
     objects = CTENodeManager()
 
+    class Meta:
+        abstract = True
+        base_manager_name = 'objects'
+        # Prevent cycles in order to maintain tree / forest property.
+        unique_together = [('id', 'parent')]
 
     def clean(self):
         """ Prevents cycles in the tree. """
@@ -1070,13 +1047,11 @@ class CTENode(Model):
                 'A node cannot be made a descendant of itself.'
             ))
 
-
     def root(self):
         """ Returns the CTENode which is the root of the tree in which this
             node participates.
         """
         return self.__class__.objects.root(self)
-
 
     def siblings(self):
         """ Returns a :class:`QuerySet` of all siblings of this node.
@@ -1085,7 +1060,6 @@ class CTENode(Model):
         """
         return self.__class__.objects.siblings(self)
 
-
     def ancestors(self):
         """ Returns a :class:`QuerySet` of all ancestors of this node.
 
@@ -1093,14 +1067,12 @@ class CTENode(Model):
         """
         return self.__class__.objects.ancestors(self)
 
-
     def descendants(self):
         """ Returns a :class:`QuerySet` of all descendants of this node.
 
             :returns: A :class:`QuerySet` of all descendants of this node.
         """
         return self.__class__.objects.descendants(self)
-
 
     def is_parent_of(self, subject):
         """ Returns ``True`` if this node is the parent of the given `subject`
@@ -1115,7 +1087,6 @@ class CTENode(Model):
         """
         return self.__class__.objects.is_parent_of(self, subject)
 
-
     def is_child_of(self, subject):
         """ Returns ``True`` if this node is a child of the given `subject`
             node, ``False`` otherwise. This method used the :attr:`parent`
@@ -1128,7 +1099,6 @@ class CTENode(Model):
                 otherwise.
         """
         return self.__class__.objects.is_child_of(self, subject)
-
 
     def is_sibling_of(self, subject):
         """ Returns ``True`` if this node is a sibling of the given `subject`
@@ -1143,7 +1113,6 @@ class CTENode(Model):
         """
         return self.__class__.objects.is_sibling_of(self, subject)
 
-
     def is_ancestor_of(self, subject):
         """ Returns ``True`` if the node is an ancestor of the given `subject`
             node, ``False`` otherwise. This method uses the :attr:`path` virtual
@@ -1156,7 +1125,6 @@ class CTENode(Model):
                 ``False`` otherwise.
         """
         return self.__class__.objects.is_ancestor_of(self, subject)
-
 
     def is_descendant_of(self, subject):
         """ Returns ``True`` if the node is a descendant of the given `subject`
@@ -1171,7 +1139,6 @@ class CTENode(Model):
         """
         return self.__class__.objects.is_descendant_of(self, subject)
 
-
     def is_leaf(self):
         """ Returns ``True`` if this node is a leaf (has no children), ``False``
             otherwise.
@@ -1180,7 +1147,6 @@ class CTENode(Model):
         """
         return self.__class__.objects.is_leaf(self)
 
-
     def is_branch(self):
         """ Returns ``True`` if this node is a branch (has at least one child),
             ``False`` otherwise.
@@ -1188,7 +1154,6 @@ class CTENode(Model):
             :return: ``True`` if this node is a branch, ``False`` otherwise.
         """
         return self.__class__.objects.is_branch(self)
-
 
     def attribute_path(self, attribute, missing = None, visitor = None):
         """ Generates a list of values of the `attribute` of all ancestors of
@@ -1218,7 +1183,6 @@ class CTENode(Model):
             _parameters['visitor'] = visitor
         return self.__class__.objects.attribute_path(**_parameters)
 
-
     def as_tree(self, visitor = None, children = None):
         """ Recursively traverses each tree (starting from each root) in order
             to generate a dictionary-based tree structure of the entire forest.
@@ -1245,7 +1209,6 @@ class CTENode(Model):
         if children is not None:
             _parameters['children'] = children
         return self.__class__.objects.node_as_tree(**_parameters)
-
 
     def move(self, destination = None, position = None, save = False):
         """ Moves this node and places it as a child node of the `destination`
@@ -1275,7 +1238,6 @@ class CTENode(Model):
         """
         return self.__class__.objects.move(self, destination, position, save)
 
-
     def delete(self, method = None, position = None, save = True):
         """ Prepares the tree for deletion according to the deletion semantics
             specified for the :class:`CTENode` Model, and then delegates to the
@@ -1297,10 +1259,3 @@ class CTENode(Model):
         self.__class__.objects.prepare_delete(self, method = method,
             position = position, save = save)
         return super(CTENode, self).delete()
-
-
-    class Meta:
-        abstract = True
-        base_manager_name = 'objects'
-        # Prevent cycles in order to maintain tree / forest property.
-        unique_together = [('id', 'parent')]
