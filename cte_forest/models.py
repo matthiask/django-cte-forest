@@ -36,8 +36,9 @@
 from __future__ import unicode_literals
 
 from django.core.exceptions import (
-    ImproperlyConfigured, FieldError, ValidationError)
-from django.db.models import Model, Manager, ForeignKey, CASCADE
+    FieldError, ImproperlyConfigured, ValidationError,
+)
+from django.db.models import CASCADE, ForeignKey, Manager, Model
 from django.db.models.fields import FieldDoesNotExist
 from django.utils.translation import ugettext as _
 

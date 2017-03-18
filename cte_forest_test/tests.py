@@ -37,21 +37,18 @@
 from datetime import date, timedelta
 from uuid import UUID
 
+from django.core.exceptions import FieldError, ImproperlyConfigured
+from django.db.models import Avg, F
 from django.test import TestCase
-from django.core.exceptions import ImproperlyConfigured, FieldError
-from django.db.models import F, Avg
 
 from cte_forest_test.models import (
-    SimpleNode, NoneDeleteNode, SimpleNodeUser,
-    SimpleNamedNode, OrderedNamedNode, ValueNamedNode,
-    SimpleNamedNodeUser,
-    DFSOrderedNode, BFSOrderedNode, NoneTraversalNode,
-    TypeCoercionNode, TypeCombinationNode, ExoticTypeNode,
-    DBTypeNode, CustomPrimaryKeyNode, DBTypePrimaryKeyNode,
-    AggregationNode, BadParameter_parent_1_Node,
+    AggregationNode, BadParameter_delete_Node, BadParameter_parent_1_Node,
     BadParameter_parent_2_Node, BadParameter_parent_3_Node,
-    BadParameter_parent_4_Node, BadParameter_traversal_Node,
-    BadParameter_delete_Node
+    BadParameter_parent_4_Node, BadParameter_traversal_Node, BFSOrderedNode,
+    CustomPrimaryKeyNode, DBTypeNode, DBTypePrimaryKeyNode, DFSOrderedNode,
+    ExoticTypeNode, NoneDeleteNode, NoneTraversalNode, OrderedNamedNode,
+    SimpleNamedNode, SimpleNamedNodeUser, SimpleNode, SimpleNodeUser,
+    TypeCoercionNode, TypeCombinationNode, ValueNamedNode,
 )
 
 

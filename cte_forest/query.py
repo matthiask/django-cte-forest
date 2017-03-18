@@ -35,14 +35,16 @@
 """
 from __future__ import unicode_literals
 
-
 from django.db import connections
 from django.db.models.query import QuerySet
-from django.db.models.sql import UpdateQuery, InsertQuery, DeleteQuery, \
-    AggregateQuery
+from django.db.models.sql import (
+    AggregateQuery, DeleteQuery, InsertQuery, UpdateQuery,
+)
+from django.db.models.sql.compiler import (
+    SQLAggregateCompiler, SQLCompiler, SQLDeleteCompiler, SQLInsertCompiler,
+    SQLUpdateCompiler,
+)
 from django.db.models.sql.query import Query
-from django.db.models.sql.compiler import SQLCompiler, SQLUpdateCompiler, \
-    SQLInsertCompiler, SQLDeleteCompiler, SQLAggregateCompiler
 from django.db.models.sql.where import ExtraWhere, WhereNode
 
 

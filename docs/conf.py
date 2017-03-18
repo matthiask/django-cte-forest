@@ -34,10 +34,10 @@
 """ Sphinx configuration for Django CTE Forest.
 """
 
-import django
 import os
 import sys
 
+import django
 
 # add package root as well as dummy Django application so models can be
 # imported

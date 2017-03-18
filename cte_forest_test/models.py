@@ -36,8 +36,10 @@
 
 from uuid import uuid4
 
-from django.db.models import Model, ForeignKey, CharField, FloatField, \
-    PositiveIntegerField, DateField, UUIDField, CASCADE
+from django.db.models import (
+    CASCADE, CharField, DateField, FloatField, ForeignKey, Model,
+    PositiveIntegerField, UUIDField,
+)
 
 from cte_forest.models import CTENode, CTENodeManager
 
