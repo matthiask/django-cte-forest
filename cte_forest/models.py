@@ -453,8 +453,8 @@ class CTENodeManager(Manager):
             # c) the separator character,
             # therefore we look for a match ending at the length of the
             # subject's id string plus two (so negative index length minus two).
-            return getattr(subject, subject._cte_node_path)[:-len(str(subject.id)) - 2].index(
-                str(node.id)) > 0
+            _path = getattr(subject, subject._cte_node_path)
+            return _path[:-len(str(subject.id)) - 2].index(str(node.id)) > 0
 
     def is_descendant_of(self, node, subject):
         """ Returns ``True`` if the given `node` is a descendant of the given

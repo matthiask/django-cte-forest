@@ -75,8 +75,8 @@ class SimpleNodeTest(TestCase):
 
     def test_multiple_node_creation(self):
 
-        node_1 = SimpleNode.objects.create()
-        node_2 = SimpleNode.objects.create()
+        SimpleNode.objects.create()
+        SimpleNode.objects.create()
 
         self.assertEqual(len(SimpleNode.objects.filter()), 2)
         self.assertEqual(SimpleNode.objects.count(), 2)
@@ -102,7 +102,7 @@ class SimpleNodeTest(TestCase):
 
     def test_node_delete_query(self):
 
-        node = SimpleNode.objects.create()
+        SimpleNode.objects.create()
 
         SimpleNode.objects.filter().delete()
 
@@ -139,8 +139,8 @@ class SimpleNodeTest(TestCase):
 
         root_node_1 = SimpleNode.objects.create()
         root_node_2 = SimpleNode.objects.create()
-        non_root_node_1 = SimpleNode.objects.create(parent=root_node_1)
-        non_root_node_2 = SimpleNode.objects.create(parent=root_node_2)
+        SimpleNode.objects.create(parent=root_node_1)
+        SimpleNode.objects.create(parent=root_node_2)
 
         self.assertEqual(len(SimpleNode.objects.roots()), 2)
         self.assertEqual(SimpleNode.objects.roots().count(), 2)
@@ -164,9 +164,9 @@ class SimpleNodeTest(TestCase):
 
         root_node = SimpleNode.objects.create()
         middle_node = SimpleNode.objects.create(parent=root_node)
-        bottom_node_1 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_2 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_3 = SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
 
         self.assertEqual(
             {root_node.id, middle_node.id},
@@ -272,9 +272,9 @@ class SimpleNodeTest(TestCase):
 
         root_node = SimpleNode.objects.create()
         middle_node = SimpleNode.objects.create(parent=root_node)
-        bottom_node_1 = SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
         bottom_node_2 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_3 = SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
 
         # We need the path information to get ancestors.
         fresh_bottom_node_2 = SimpleNode.objects.get(id=bottom_node_2.id)
@@ -286,8 +286,8 @@ class SimpleNodeTest(TestCase):
         root_node = SimpleNode.objects.create()
         middle_node = SimpleNode.objects.create(parent=root_node)
         bottom_node_1 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_2 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_3 = SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
 
         self.assertTrue(middle_node.is_child_of(root_node))
         self.assertFalse(bottom_node_1.is_child_of(root_node))
@@ -297,8 +297,8 @@ class SimpleNodeTest(TestCase):
         root_node = SimpleNode.objects.create()
         middle_node = SimpleNode.objects.create(parent=root_node)
         bottom_node_1 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_2 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_3 = SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
 
         self.assertTrue(root_node.is_parent_of(middle_node))
         self.assertFalse(root_node.is_parent_of(bottom_node_1))
@@ -310,7 +310,7 @@ class SimpleNodeTest(TestCase):
         middle_node = SimpleNode.objects.create(parent=root_node)
         bottom_node_1 = SimpleNode.objects.create(parent=middle_node)
         bottom_node_2 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_3 = SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
 
         self.assertTrue(bottom_node_1.is_sibling_of(bottom_node_2))
         self.assertTrue(bottom_node_2.is_sibling_of(bottom_node_1))
@@ -427,8 +427,7 @@ class SimpleNodeTest(TestCase):
         root_node = SimpleNamedNode.objects.create(name='root')
         middle_node = SimpleNamedNode.objects.create(parent=root_node,
                                                      name='middle')
-        bottom_node = SimpleNamedNode.objects.create(parent=middle_node,
-                                                     name='bottom')
+        SimpleNamedNode.objects.create(parent=middle_node, name='bottom')
 
         fresh_root_node = SimpleNamedNode.objects.get(name='root')
         fresh_middle_node = SimpleNamedNode.objects.get(name='middle')
@@ -460,20 +459,17 @@ class SimpleNodeTest(TestCase):
         root_node = OrderedNamedNode.objects.create(name='root')
         middle_node = OrderedNamedNode.objects.create(parent=root_node,
                                                       name='middle')
-        bottom_node_3 = OrderedNamedNode.objects.create(parent=middle_node,
-                                                        name='bottom 3')
-        bottom_node_1 = OrderedNamedNode.objects.create(parent=middle_node,
-                                                        name='bottom 1')
-        bottom_node_2 = OrderedNamedNode.objects.create(parent=middle_node,
-                                                        name='bottom 2')
-        another_root_node = OrderedNamedNode.objects.create(name='root other')
+        OrderedNamedNode.objects.create(parent=middle_node, name='bottom 3')
+        OrderedNamedNode.objects.create(parent=middle_node, name='bottom 1')
+        OrderedNamedNode.objects.create(parent=middle_node, name='bottom 2')
+        OrderedNamedNode.objects.create(name='root other')
 
-        fresh_root_node = OrderedNamedNode.objects.get(name='root')
+        OrderedNamedNode.objects.get(name='root')
         fresh_middle_node = OrderedNamedNode.objects.get(name='middle')
-        fresh_bottom_node_1 = OrderedNamedNode.objects.get(name='bottom 1')
+        OrderedNamedNode.objects.get(name='bottom 1')
         fresh_bottom_node_2 = OrderedNamedNode.objects.get(name='bottom 2')
-        fresh_bottom_node_3 = OrderedNamedNode.objects.get(name='bottom 3')
-        fresh_another_root_node = OrderedNamedNode.objects.get(name='root other')
+        OrderedNamedNode.objects.get(name='bottom 3')
+        OrderedNamedNode.objects.get(name='root other')
 
         # get the forest
         tree = OrderedNamedNode.objects.as_tree()
@@ -501,20 +497,17 @@ class SimpleNodeTest(TestCase):
         root_node = OrderedNamedNode.objects.create(name='root')
         middle_node = OrderedNamedNode.objects.create(parent=root_node,
                                                       name='middle')
-        bottom_node_3 = OrderedNamedNode.objects.create(parent=middle_node,
-                                                        name='bottom 3')
-        bottom_node_1 = OrderedNamedNode.objects.create(parent=middle_node,
-                                                        name='bottom 1')
-        bottom_node_2 = OrderedNamedNode.objects.create(parent=middle_node,
-                                                        name='bottom 2')
-        another_root_node = OrderedNamedNode.objects.create(name='root other')
+        OrderedNamedNode.objects.create(parent=middle_node, name='bottom 3')
+        OrderedNamedNode.objects.create(parent=middle_node, name='bottom 1')
+        OrderedNamedNode.objects.create(parent=middle_node, name='bottom 2')
+        OrderedNamedNode.objects.create(name='root other')
 
-        fresh_root_node = OrderedNamedNode.objects.get(name='root')
+        OrderedNamedNode.objects.get(name='root')
         fresh_middle_node = OrderedNamedNode.objects.get(name='middle')
-        fresh_bottom_node_1 = OrderedNamedNode.objects.get(name='bottom 1')
-        fresh_bottom_node_2 = OrderedNamedNode.objects.get(name='bottom 2')
+        OrderedNamedNode.objects.get(name='bottom 1')
+        OrderedNamedNode.objects.get(name='bottom 2')
         fresh_bottom_node_3 = OrderedNamedNode.objects.get(name='bottom 3')
-        fresh_another_root_node = OrderedNamedNode.objects.get(name='root other')
+        OrderedNamedNode.objects.get(name='root other')
 
         def custom_visitor(manager, node):
             tree = manager._default_node_visitor(node)
@@ -564,22 +557,21 @@ class SimpleNodeTest(TestCase):
         root_node = SimpleNamedNode.objects.create(name='root')
         middle_node = SimpleNamedNode.objects.create(parent=root_node,
                                                      name='middle')
-        bottom_node = SimpleNamedNode.objects.create(parent=middle_node,
-                                                     name='bottom')
+        SimpleNamedNode.objects.create(parent=middle_node, name='bottom')
 
         fresh_root_node = SimpleNamedNode.objects.get(name='root')
-        fresh_middle_node = SimpleNamedNode.objects.get(name='middle')
+        SimpleNamedNode.objects.get(name='middle')
         fresh_bottom_node = SimpleNamedNode.objects.get(name='bottom')
 
         # check missing path component
-        self.assertRaises(SimpleNamedNode.DoesNotExist,
-                          lambda: SimpleNamedNode.objects.drilldown(('name', ),
-                                                                    [('root', ), ('xxx')]))
+        self.assertRaises(
+            SimpleNamedNode.DoesNotExist,
+            lambda: SimpleNamedNode.objects.drilldown(('name', ), [('root', ), ('xxx')]))
 
         # check missing root component
-        self.assertRaises(SimpleNamedNode.DoesNotExist,
-                          lambda: SimpleNamedNode.objects.drilldown(('name', ),
-                                                                    [('xxx', ), ('xxx')]))
+        self.assertRaises(
+            SimpleNamedNode.DoesNotExist,
+            lambda: SimpleNamedNode.objects.drilldown(('name', ), [('xxx', ), ('xxx')]))
 
         # check success
         self.assertEqual(fresh_bottom_node, SimpleNamedNode.objects.drilldown(
@@ -604,17 +596,16 @@ class SimpleNodeTest(TestCase):
         root_node = ValueNamedNode.objects.create(name='root', v=5)
         middle_node = ValueNamedNode.objects.create(
             parent=root_node, name='middle', v=5)
-        bottom_node_1 = ValueNamedNode.objects.create(
+        ValueNamedNode.objects.create(
             parent=middle_node, name='xxx bottom 1', v=7)
-        bottom_node_2 = ValueNamedNode.objects.create(
+        ValueNamedNode.objects.create(
             parent=middle_node, name='bottom 2', v=1)
-        bottom_node_3 = ValueNamedNode.objects.create(
-            parent=middle_node, name='bottom 3', v=6)
+        ValueNamedNode.objects.create(parent=middle_node, name='bottom 3', v=6)
 
-        fresh_root_node = ValueNamedNode.objects.get(name='root')
-        fresh_middle_node = ValueNamedNode.objects.get(name='middle')
-        fresh_bottom_node_1 = ValueNamedNode.objects.get(name='xxx bottom 1')
-        fresh_bottom_node_2 = ValueNamedNode.objects.get(name='bottom 2')
+        ValueNamedNode.objects.get(name='root')
+        ValueNamedNode.objects.get(name='middle')
+        ValueNamedNode.objects.get(name='xxx bottom 1')
+        ValueNamedNode.objects.get(name='bottom 2')
         fresh_bottom_node_3 = ValueNamedNode.objects.get(name='bottom 3')
 
         self.assertEqual(fresh_bottom_node_3, ValueNamedNode.objects.drilldown(
@@ -625,9 +616,9 @@ class SimpleNodeTest(TestCase):
 
         root_node = SimpleNode.objects.create()
         middle_node = SimpleNode.objects.create(parent=root_node)
-        bottom_node_1 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_2 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_3 = SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
 
         middle_node.delete()
 
@@ -687,9 +678,9 @@ class SimpleNodeTest(TestCase):
 
         root_node = NoneDeleteNode.objects.create()
         middle_node = NoneDeleteNode.objects.create(parent=root_node)
-        bottom_node_1 = NoneDeleteNode.objects.create(parent=middle_node)
-        bottom_node_2 = NoneDeleteNode.objects.create(parent=middle_node)
-        bottom_node_3 = NoneDeleteNode.objects.create(parent=middle_node)
+        NoneDeleteNode.objects.create(parent=middle_node)
+        NoneDeleteNode.objects.create(parent=middle_node)
+        NoneDeleteNode.objects.create(parent=middle_node)
 
         middle_node.delete()
 
@@ -701,8 +692,8 @@ class SimpleNodeTest(TestCase):
 
         root_node = SimpleNode.objects.create()
         middle_node = SimpleNode.objects.create(parent=root_node)
-        bottom_node_1 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_2 = SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
         bottom_node_3 = SimpleNode.objects.create(parent=middle_node)
 
         fresh_bottom_node_3 = SimpleNode.objects.get(id=bottom_node_3.id)
@@ -770,11 +761,11 @@ class SimpleNodeUsageTest(TestCase):
 
         root_node = SimpleNode.objects.create()
         middle_node = SimpleNode.objects.create(parent=root_node)
-        bottom_node_1 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_2 = SimpleNode.objects.create(parent=middle_node)
-        bottom_node_3 = SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
+        SimpleNode.objects.create(parent=middle_node)
 
-        root_node_user = SimpleNodeUser.objects.create(node=root_node)
+        SimpleNodeUser.objects.create(node=root_node)
 
         self.assertEqual(SimpleNodeUser.objects.get().node.id, root_node.id)
 
@@ -810,12 +801,9 @@ class SimpleNamedNodeTest(TestCase):
                                                      name='middle')
 
         # Create these in mixed order to test ordering by name below.
-        bottom_node_2 = SimpleNamedNode.objects.create(parent=middle_node,
-                                                       name='bottom 2')
-        bottom_node_3 = SimpleNamedNode.objects.create(parent=middle_node,
-                                                       name='bottom 3')
-        bottom_node_1 = SimpleNamedNode.objects.create(parent=middle_node,
-                                                       name='bottom 1')
+        SimpleNamedNode.objects.create(parent=middle_node, name='bottom 2')
+        SimpleNamedNode.objects.create(parent=middle_node, name='bottom 3')
+        SimpleNamedNode.objects.create(parent=middle_node, name='bottom 1')
 
         # Order should be by primary key, not name.
         node_names = [node.name for node in SimpleNamedNode.objects.all()]
@@ -834,12 +822,9 @@ class SimpleNamedNodeTest(TestCase):
         root_node = SimpleNamedNode.objects.create(name='root')
         middle_node = SimpleNamedNode.objects.create(parent=root_node,
                                                      name='middle')
-        bottom_node_1 = SimpleNamedNode.objects.create(parent=middle_node,
-                                                       name='bottom 1')
-        bottom_node_2 = SimpleNamedNode.objects.create(parent=middle_node,
-                                                       name='bottom 2')
-        bottom_node_3 = SimpleNamedNode.objects.create(parent=middle_node,
-                                                       name='bottom 3')
+        SimpleNamedNode.objects.create(parent=middle_node, name='bottom 1')
+        SimpleNamedNode.objects.create(parent=middle_node, name='bottom 2')
+        SimpleNamedNode.objects.create(parent=middle_node, name='bottom 3')
 
         self.assertEqual(
             'bottom 1',
@@ -869,12 +854,9 @@ class OrderedNamedNodeTest(TestCase):
                                                       name='middle')
 
         # Create these in mixed order to test ordering by name below.
-        bottom_node_2 = OrderedNamedNode.objects.create(parent=middle_node,
-                                                        name='bottom 2')
-        bottom_node_3 = OrderedNamedNode.objects.create(parent=middle_node,
-                                                        name='bottom 3')
-        bottom_node_1 = OrderedNamedNode.objects.create(parent=middle_node,
-                                                        name='bottom 1')
+        OrderedNamedNode.objects.create(parent=middle_node, name='bottom 2')
+        OrderedNamedNode.objects.create(parent=middle_node, name='bottom 3')
+        OrderedNamedNode.objects.create(parent=middle_node, name='bottom 1')
 
         # Order should be by path name, not primary key.
         node_names = [node.name for node in OrderedNamedNode.objects.all()]
@@ -1168,8 +1150,7 @@ class DBTypeNodeTest(TestCase):
         # opposite order from which we are ordering.
         middle_node_1 = DBTypeNode.objects.create(parent=root_node,
                                                   v=self.sorted_uuids[2])
-        middle_node_2 = DBTypeNode.objects.create(parent=root_node,
-                                                  v=self.sorted_uuids[1])
+        DBTypeNode.objects.create(parent=root_node, v=self.sorted_uuids[1])
 
         fresh_middle_node_1 = DBTypeNode.objects.get(id=middle_node_1.id)
 
@@ -1180,8 +1161,8 @@ class DBTypeNodeTest(TestCase):
         root_node = DBTypeNode.objects.create()
         middle_node = DBTypeNode.objects.create(parent=root_node)
         bottom_node_1 = DBTypeNode.objects.create(parent=middle_node)
-        bottom_node_2 = DBTypeNode.objects.create(parent=middle_node)
-        bottom_node_3 = DBTypeNode.objects.create(parent=middle_node)
+        DBTypeNode.objects.create(parent=middle_node)
+        DBTypeNode.objects.create(parent=middle_node)
 
         fresh_middle_node = DBTypeNode.objects.get(id=middle_node.id)
         fresh_bottom_node_1 = DBTypeNode.objects.get(id=bottom_node_1.id)
@@ -1201,10 +1182,8 @@ class CustomPrimaryKeyNodeTest(TestCase):
                                                           parent=root_node)
         bottom_node_1 = CustomPrimaryKeyNode.objects.create(id='bottom 1',
                                                             parent=middle_node)
-        bottom_node_2 = CustomPrimaryKeyNode.objects.create(id='bottom 2',
-                                                            parent=middle_node)
-        bottom_node_3 = CustomPrimaryKeyNode.objects.create(id='bottom 3',
-                                                            parent=middle_node)
+        CustomPrimaryKeyNode.objects.create(id='bottom 2', parent=middle_node)
+        CustomPrimaryKeyNode.objects.create(id='bottom 3', parent=middle_node)
 
         fresh_middle_node = CustomPrimaryKeyNode.objects.get(
             id=middle_node.id)
@@ -1223,10 +1202,8 @@ class CustomPrimaryKeyNodeTest(TestCase):
                                                           parent=root_node)
         bottom_node_1 = CustomPrimaryKeyNode.objects.create(id='bottom 1',
                                                             parent=middle_node)
-        bottom_node_2 = CustomPrimaryKeyNode.objects.create(id='bottom 2',
-                                                            parent=middle_node)
-        bottom_node_3 = CustomPrimaryKeyNode.objects.create(id='bottom 3',
-                                                            parent=middle_node)
+        CustomPrimaryKeyNode.objects.create(id='bottom 2', parent=middle_node)
+        CustomPrimaryKeyNode.objects.create(id='bottom 3', parent=middle_node)
 
         fresh_root_node = CustomPrimaryKeyNode.objects.get(id=root_node.id)
         fresh_middle_node = CustomPrimaryKeyNode.objects.get(
@@ -1254,9 +1231,9 @@ class DBTypePrimaryKeyNodeTest(TestCase):
         middle_node = DBTypePrimaryKeyNode.objects.create(parent=root_node)
         bottom_node_1 = DBTypePrimaryKeyNode.objects.create(
             parent=middle_node)
-        bottom_node_2 = DBTypePrimaryKeyNode.objects.create(
+        DBTypePrimaryKeyNode.objects.create(
             parent=middle_node)
-        bottom_node_3 = DBTypePrimaryKeyNode.objects.create(
+        DBTypePrimaryKeyNode.objects.create(
             parent=middle_node)
 
         fresh_middle_node = DBTypePrimaryKeyNode.objects.get(
@@ -1326,9 +1303,9 @@ class AggregationNodeTest(TestCase):
 
     def test_aggregation(self):
 
-        node1 = AggregationNode.objects.create(price=100)
+        AggregationNode.objects.create(price=100)
         node2 = AggregationNode.objects.create(price=200)
-        node3 = AggregationNode.objects.create(price=300)
+        AggregationNode.objects.create(price=300)
 
         self.assertEqual(
             AggregationNode.objects.all().aggregate(Avg('price'))['price__avg'],
