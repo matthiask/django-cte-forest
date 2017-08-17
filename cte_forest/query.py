@@ -35,6 +35,7 @@
 """
 from __future__ import unicode_literals
 
+import django
 from django.db import connections
 from django.db.models.query import QuerySet
 from django.db.models.sql import (
@@ -101,7 +102,10 @@ class CTEQuerySet(QuerySet):
                 raise TypeError("Complex aggregates require an alias")
             kwargs[arg.default_alias] = arg
 
-        query = self.query.clone(CTEAggregateQuery)
+        if django.VERSION < (2, 0):
+            query = self.query.clone(CTEAggregateQuery)
+        else:
+            query = self.query.chain(CTEAggregateQuery)
         for (alias, aggregate_expr) in kwargs.items():
             query.add_annotation(aggregate_expr, alias, is_summary=True)
             if not query.annotations[alias].contains_aggregate:
@@ -232,19 +236,35 @@ class CTEQuery(Query):
             CTEAggregateQuery: CTEAggregateQueryCompiler,
         }.get(self.__class__, CTEQueryCompiler)(self, connection, using)
 
-    def clone(self, klass=None, memo=None, **kwargs):
-        """ Overrides Django's Query clone in order to return appropriate CTE
-            compiler based on the target Query class. This mechanism is used by
-            methods such as 'update' and '_update' in order to generate UPDATE
-            queries rather than SELECT queries.
-        """
-        klass = {
-            UpdateQuery: CTEUpdateQuery,
-            InsertQuery: CTEInsertQuery,
-            DeleteQuery: CTEDeleteQuery,
-            AggregateQuery: CTEAggregateQuery,
-        }.get(klass, self.__class__)
-        return super(CTEQuery, self).clone(klass, memo, **kwargs)
+    if django.VERSION < (2, 0):
+        def clone(self, klass=None, memo=None, **kwargs):
+            """ Overrides Django's Query clone in order to return appropriate CTE
+                compiler based on the target Query class. This mechanism is used by
+                methods such as 'update' and '_update' in order to generate UPDATE
+                queries rather than SELECT queries.
+            """
+            klass = {
+                UpdateQuery: CTEUpdateQuery,
+                InsertQuery: CTEInsertQuery,
+                DeleteQuery: CTEDeleteQuery,
+                AggregateQuery: CTEAggregateQuery,
+            }.get(klass, self.__class__)
+            return super(CTEQuery, self).clone(klass, memo, **kwargs)
+
+    else:
+        def chain(self, klass=None):
+            """ Overrides Django's Query clone in order to return appropriate CTE
+                compiler based on the target Query class. This mechanism is used by
+                methods such as 'update' and '_update' in order to generate UPDATE
+                queries rather than SELECT queries.
+            """
+            klass = {
+                UpdateQuery: CTEUpdateQuery,
+                InsertQuery: CTEInsertQuery,
+                DeleteQuery: CTEDeleteQuery,
+                AggregateQuery: CTEAggregateQuery,
+            }.get(klass, self.__class__)
+            return super(CTEQuery, self).chain(klass)
 
 
 class CTEUpdateQuery(UpdateQuery, CTEQuery):
