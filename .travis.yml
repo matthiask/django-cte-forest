@@ -8,6 +8,7 @@ python:
 env:
 - REQ="Django>=1.10,<1.11"
 - REQ="Django>=1.11,<2.0"
+- REQ="https://github.com/django/django/archive/stable/2.0.x.zip#egg=Django"
 - REQ="https://github.com/django/django/archive/master.zip#egg=Django"
 matrix:
   allow_failures:
