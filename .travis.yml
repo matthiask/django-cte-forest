@@ -1,10 +1,12 @@
-language: python
 sudo: false
-cache: pip
+# cache: pip
+language: python
 python:
-- '2.7'
-- '3.5'
-- '3.6'
+- "3.6"
+- "3.5"
+- "2.7"
+addons:
+  postgresql: "9.4"
 env:
 - REQ="Django>=1.10,<1.11"
 - REQ="Django>=1.11,<2.0"
@@ -14,13 +16,22 @@ matrix:
   allow_failures:
     - env: REQ="https://github.com/django/django/archive/master.zip#egg=Django"
   exclude:
-    - python: '2.7'
+    - python: "2.7"
       env: REQ="Django>=2.0,<2.1"
-    - python: '2.7'
+    - python: "2.7"
       env: REQ="https://github.com/django/django/archive/master.zip#egg=Django"
-services:
-- postgresql
 install:
 - pip install -U pip wheel
-- pip install $REQ psycopg2 pytz
-script: PYTHONWARNINGS=all PYTHONPATH=. ./cte_forest_test/manage.py test
+- pip install psycopg2-binary
+- pip install $REQ
+- python setup.py install
+script: PYTHONWARNINGS=all PYTHONPATH=. cte_forest_test/manage.py test -v 2
+
+jobs:
+  include:
+    - stage: style
+      env: REQ=none
+      install: skip
+      script:
+        - pip install flake8
+        - flake8 .

@@ -35,9 +35,7 @@
 """
 from __future__ import unicode_literals
 
-from django.core.exceptions import (
-    FieldError, ImproperlyConfigured, ValidationError,
-)
+from django.core.exceptions import FieldError, ImproperlyConfigured, ValidationError
 from django.db.models import CASCADE, ForeignKey, Manager, Model
 from django.db.models.fields import FieldDoesNotExist
 from django.utils.translation import ugettext as _
@@ -75,41 +73,48 @@ class CTENodeManager(Manager):
         to this manager.
 
     """
+
     # SQL CTE temporary table name.
-    DEFAULT_TABLE_NAME = 'cte'
-    DEFAULT_CHILDREN_NAME = 'children'
+    DEFAULT_TABLE_NAME = "cte"
+    DEFAULT_CHILDREN_NAME = "children"
 
     # Tree traversal semantics.
-    TREE_TRAVERSAL_NONE = 'none'
-    TREE_TRAVERSAL_DFS = 'dfs'
-    TREE_TRAVERSAL_BFS = 'bfs'
-    TREE_TRAVERSAL_METHODS = (TREE_TRAVERSAL_NONE, TREE_TRAVERSAL_DFS,
-                              TREE_TRAVERSAL_BFS)
+    TREE_TRAVERSAL_NONE = "none"
+    TREE_TRAVERSAL_DFS = "dfs"
+    TREE_TRAVERSAL_BFS = "bfs"
+    TREE_TRAVERSAL_METHODS = (
+        TREE_TRAVERSAL_NONE,
+        TREE_TRAVERSAL_DFS,
+        TREE_TRAVERSAL_BFS,
+    )
     TREE_TRAVERSAL_CHOICES = (
-        (TREE_TRAVERSAL_NONE, _('none')),
-        (TREE_TRAVERSAL_DFS, _('depth first search')),
-        (TREE_TRAVERSAL_BFS, _('breadth first search')),
+        (TREE_TRAVERSAL_NONE, _("none")),
+        (TREE_TRAVERSAL_DFS, _("depth first search")),
+        (TREE_TRAVERSAL_BFS, _("breadth first search")),
     )
     DEFAULT_TREE_TRAVERSAL = TREE_TRAVERSAL_DFS
 
     # Virtual fields.
-    VIRTUAL_FIELD_DEPTH = 'depth'
-    VIRTUAL_FIELD_PATH = 'path'
-    VIRTUAL_FIELD_ORDERING = 'ordering'
+    VIRTUAL_FIELD_DEPTH = "depth"
+    VIRTUAL_FIELD_PATH = "path"
+    VIRTUAL_FIELD_ORDERING = "ordering"
 
     # Deletion semantics.
-    DELETE_METHOD_NONE = 'none'
-    DELETE_METHOD_PHARAOH = 'pharaoh'
-    DELETE_METHOD_GRANDMOTHER = 'grandmother'
-    DELETE_METHOD_MONARCHY = 'monarchy'
-    DELETE_METHODS = (DELETE_METHOD_NONE, DELETE_METHOD_PHARAOH,
-                      DELETE_METHOD_GRANDMOTHER, DELETE_METHOD_MONARCHY)
+    DELETE_METHOD_NONE = "none"
+    DELETE_METHOD_PHARAOH = "pharaoh"
+    DELETE_METHOD_GRANDMOTHER = "grandmother"
+    DELETE_METHOD_MONARCHY = "monarchy"
+    DELETE_METHODS = (
+        DELETE_METHOD_NONE,
+        DELETE_METHOD_PHARAOH,
+        DELETE_METHOD_GRANDMOTHER,
+        DELETE_METHOD_MONARCHY,
+    )
     DELETE_METHOD_CHOICES = (
-        (DELETE_METHOD_NONE, _('none')),
-        (DELETE_METHOD_PHARAOH, _('pharaoh (all subtree)')),
-        (DELETE_METHOD_GRANDMOTHER, _('grandmother (move subtree up)')),
-        (DELETE_METHOD_MONARCHY,
-         _('monarchy (first child becomes subtree root)')),
+        (DELETE_METHOD_NONE, _("none")),
+        (DELETE_METHOD_PHARAOH, _("pharaoh (all subtree)")),
+        (DELETE_METHOD_GRANDMOTHER, _("grandmother (move subtree up)")),
+        (DELETE_METHOD_MONARCHY, _("monarchy (first child becomes subtree root)")),
     )
     DEFAULT_DELETE_METHOD = DELETE_METHOD_PHARAOH
 
@@ -126,105 +131,142 @@ class CTENodeManager(Manager):
             attribute to ``True`` upon its first success.
         """
 
-        if hasattr(self, '_parameters_checked'):
+        if hasattr(self, "_parameters_checked"):
             return
 
-        if not hasattr(self.model, '_cte_node_table') or \
-                self.model._cte_node_table is None:
-            setattr(self.model, '_cte_node_table',
-                    self.DEFAULT_TABLE_NAME)
+        if (
+            not hasattr(self.model, "_cte_node_table")
+            or self.model._cte_node_table is None
+        ):
+            setattr(self.model, "_cte_node_table", self.DEFAULT_TABLE_NAME)
 
-        if not hasattr(self.model, '_cte_node_depth') or \
-                self.model._cte_node_depth is None:
-            setattr(self.model, '_cte_node_depth',
-                    self.VIRTUAL_FIELD_DEPTH)
+        if (
+            not hasattr(self.model, "_cte_node_depth")
+            or self.model._cte_node_depth is None
+        ):
+            setattr(self.model, "_cte_node_depth", self.VIRTUAL_FIELD_DEPTH)
 
-        if not hasattr(self.model, '_cte_node_path') or \
-                self.model._cte_node_depth is None:
-            setattr(self.model, '_cte_node_path',
-                    self.VIRTUAL_FIELD_PATH)
+        if (
+            not hasattr(self.model, "_cte_node_path")
+            or self.model._cte_node_depth is None
+        ):
+            setattr(self.model, "_cte_node_path", self.VIRTUAL_FIELD_PATH)
 
-        if not hasattr(self.model, '_cte_node_ordering') or \
-                self.model._cte_node_ordering is None:
-            setattr(self.model, '_cte_node_ordering',
-                    self.VIRTUAL_FIELD_ORDERING)
+        if (
+            not hasattr(self.model, "_cte_node_ordering")
+            or self.model._cte_node_ordering is None
+        ):
+            setattr(self.model, "_cte_node_ordering", self.VIRTUAL_FIELD_ORDERING)
 
-        if not hasattr(self.model, '_cte_node_traversal') or \
-                self.model._cte_node_traversal is None:
-            setattr(self.model, '_cte_node_traversal',
-                    self.DEFAULT_TREE_TRAVERSAL)
+        if (
+            not hasattr(self.model, "_cte_node_traversal")
+            or self.model._cte_node_traversal is None
+        ):
+            setattr(self.model, "_cte_node_traversal", self.DEFAULT_TREE_TRAVERSAL)
 
-        if not hasattr(self.model, '_cte_node_children') or \
-                self.model._cte_node_children is None:
-            setattr(self.model, '_cte_node_children',
-                    self.DEFAULT_CHILDREN_NAME)
+        if (
+            not hasattr(self.model, "_cte_node_children")
+            or self.model._cte_node_children is None
+        ):
+            setattr(self.model, "_cte_node_children", self.DEFAULT_CHILDREN_NAME)
 
-        if not hasattr(self.model, '_cte_node_primary_key_type'):
-            setattr(self.model, '_cte_node_primary_key_type', None)
+        if not hasattr(self.model, "_cte_node_primary_key_type"):
+            setattr(self.model, "_cte_node_primary_key_type", None)
 
         # Determine the parent foreign key field name, either
         # explicitly specified, or the first foreign key to 'self'.
         # If we need to determine, then we set the attribute for future
         # reference.
-        if not hasattr(self.model, '_cte_node_parent') or \
-                self.model._cte_node_parent is None:
+        if (
+            not hasattr(self.model, "_cte_node_parent")
+            or self.model._cte_node_parent is None
+        ):
             found = False
             for f in self.model._meta.fields:
                 if isinstance(f, ForeignKey):
                     if f.remote_field.model == self.model:
-                        setattr(self.model, '_cte_node_parent', f.name)
+                        setattr(self.model, "_cte_node_parent", f.name)
                         found = True
             if not found:
                 raise ImproperlyConfigured(
-                    _('CTENode must have a Foreign Key to self for the parent '
-                      'relation.'))
+                    _(
+                        "CTENode must have a Foreign Key to self for the parent "
+                        "relation."
+                    )
+                )
 
         try:
-            parent_field = self.model._meta.get_field(
-                self.model._cte_node_parent)
+            parent_field = self.model._meta.get_field(self.model._cte_node_parent)
         except FieldDoesNotExist:
-            raise ImproperlyConfigured(''.join([
-                _('CTENode._cte_node_parent must specify a Foreign Key to self, '
-                  'instead it is: '),
-                self.model._cte_node_parent]))
+            raise ImproperlyConfigured(
+                "".join(
+                    [
+                        _(
+                            "CTENode._cte_node_parent must specify a Foreign Key"
+                            " to self, instead it is: "
+                        ),
+                        self.model._cte_node_parent,
+                    ]
+                )
+            )
 
         # Ensure parent relation is a Foreign Key to self.
         if not parent_field.remote_field.model == self.model:
-            raise ImproperlyConfigured(''.join([
-                _('CTENode._cte_node_parent must specify a Foreign Key to self, '
-                  'instead it is: '),
-                self.model._cte_node_parent]))
+            raise ImproperlyConfigured(
+                "".join(
+                    [
+                        _(
+                            "CTENode._cte_node_parent must specify a Foreign Key"
+                            " to self, instead it is: "
+                        ),
+                        self.model._cte_node_parent,
+                    ]
+                )
+            )
 
         # Record the parent field attribute name for future reference.
         setattr(
-            self.model, '_cte_node_parent_attname',
-            self.model._meta.get_field(self.model._cte_node_parent).attname)
+            self.model,
+            "_cte_node_parent_attname",
+            self.model._meta.get_field(self.model._cte_node_parent).attname,
+        )
 
         # Ensure traversal choice is valid.
-        traversal_choices = [
-            choice[0] for choice in self.TREE_TRAVERSAL_CHOICES]
+        traversal_choices = [choice[0] for choice in self.TREE_TRAVERSAL_CHOICES]
         if self.model._cte_node_traversal not in traversal_choices:
             raise ImproperlyConfigured(
-                ' '.join(['CTENode._cte_node_traversal must be one of [',
-                          ', '.join(traversal_choices), ']; instead it is:',
-                          self.model._cte_node_traversal]))
+                " ".join(
+                    [
+                        "CTENode._cte_node_traversal must be one of [",
+                        ", ".join(traversal_choices),
+                        "]; instead it is:",
+                        self.model._cte_node_traversal,
+                    ]
+                )
+            )
 
         # Ensure delete choice is valid.
-        if not hasattr(self.model, '_cte_node_delete_method') or \
-                self.model._cte_node_delete_method is None:
-            setattr(self.model, '_cte_node_delete_method',
-                    self.DEFAULT_DELETE_METHOD)
+        if (
+            not hasattr(self.model, "_cte_node_delete_method")
+            or self.model._cte_node_delete_method is None
+        ):
+            setattr(self.model, "_cte_node_delete_method", self.DEFAULT_DELETE_METHOD)
         else:
             # Ensure specified method is valid.
-            method_choices = [
-                dm[0] for dm in self.DELETE_METHOD_CHOICES]
+            method_choices = [dm[0] for dm in self.DELETE_METHOD_CHOICES]
             if self.model._cte_node_delete_method not in method_choices:
                 raise ImproperlyConfigured(
-                    ' '.join(['delete method must be one of [',
-                              ', '.join(method_choices), ']; instead it is:',
-                              self.model._cte_node_delete_method]))
+                    " ".join(
+                        [
+                            "delete method must be one of [",
+                            ", ".join(method_choices),
+                            "]; instead it is:",
+                            self.model._cte_node_delete_method,
+                        ]
+                    )
+                )
 
-        setattr(self, '_parameters_checked', True)
+        setattr(self, "_parameters_checked", True)
 
     def _ensure_virtual_fields(self, node):
         """ Attempts to read the virtual fields from the given `node` in order
@@ -240,13 +282,17 @@ class CTENodeManager(Manager):
         # Uses several _cte_node_* parameters, so ensure they exist.
         self._ensure_parameters()
         for vf in [
-                self.model._cte_node_depth,
-                self.model._cte_node_path,
-                self.model._cte_node_ordering]:
+            self.model._cte_node_depth,
+            self.model._cte_node_path,
+            self.model._cte_node_ordering,
+        ]:
             if not hasattr(node, vf):
                 raise FieldError(
-                    _('CTENode objects must be loaded from the database before '
-                      'they can be used.'))
+                    _(
+                        "CTENode objects must be loaded from the database before "
+                        "they can be used."
+                    )
+                )
 
     def get_queryset(self):
         """ Returns a custom :class:`QuerySet` which provides the CTE
@@ -282,9 +328,9 @@ class CTENodeManager(Manager):
         """
         # We need to read the _cte_node_children attribute, so ensure it exists.
         self._ensure_parameters()
-        return self.exclude(**{
-            '%s__id__in' % self.model._cte_node_children: self.all(),
-        })
+        return self.exclude(
+            **{"%s__id__in" % self.model._cte_node_children: self.all()}
+        )
 
     def branches(self):
         """ Returns a :class:`QuerySet` of all branch nodes (nodes with at least
@@ -295,9 +341,9 @@ class CTENodeManager(Manager):
         """
         # We need to read the _cte_node_children attribute, so ensure it exists.
         self._ensure_parameters()
-        return self.filter(**{
-            '%s__id__in' % self.model._cte_node_children: self.all(),
-        }).distinct()
+        return self.filter(
+            **{"%s__id__in" % self.model._cte_node_children: self.all()}
+        ).distinct()
 
     def root(self, node):
         """ Returns the :class:`CTENode` which is the root of the tree in which
@@ -326,12 +372,13 @@ class CTENodeManager(Manager):
         # exist.
         self._ensure_parameters()
         # We need to construct: filter(parent = node.parent_id)
-        return self.filter(**{
-            self.model._cte_node_parent: getattr(
-                node,
-                self.model._cte_node_parent_attname,
-            ),
-        }).exclude(id=node.id)
+        return self.filter(
+            **{
+                self.model._cte_node_parent: getattr(
+                    node, self.model._cte_node_parent_attname
+                )
+            }
+        ).exclude(id=node.id)
 
     def ancestors(self, node):
         """ Returns a :class:`QuerySet` of all ancestors of a given
@@ -343,8 +390,7 @@ class CTENodeManager(Manager):
         """
         # We need to use the path virtual field, so ensure it exists.
         self._ensure_virtual_fields(node)
-        return self.filter(
-            pk__in=getattr(node, self.model._cte_node_path)[:-1])
+        return self.filter(pk__in=getattr(node, self.model._cte_node_path)[:-1])
 
     def descendants(self, node):
         """ Returns a :class:`QuerySet` with all descendants for a given
@@ -361,8 +407,7 @@ class CTENodeManager(Manager):
         # the offset CTENode to the custom QuerySet, which will process it.
         # Because the compiler will include the node in question in the offset,
         # we must exclude it here.
-        return CTEQuerySet(self.model, using=self._db,
-                           offset=node).exclude(pk=node.pk)
+        return CTEQuerySet(self.model, using=self._db, offset=node).exclude(pk=node.pk)
 
     def is_parent_of(self, node, subject):
         """ Returns ``True`` if the given `node` is the parent of the given
@@ -454,7 +499,7 @@ class CTENodeManager(Manager):
             # therefore we look for a match ending at the length of the
             # subject's id string plus two (so negative index length minus two).
             _path = getattr(subject, subject._cte_node_path)
-            return _path[:-len(str(subject.id)) - 2].index(str(node.id)) > 0
+            return _path[: -len(str(subject.id)) - 2].index(str(node.id)) > 0
 
     def is_descendant_of(self, node, subject):
         """ Returns ``True`` if the given `node` is a descendant of the given
@@ -497,7 +542,7 @@ class CTENodeManager(Manager):
             # therefore we look for a match ending at most at the length of the
             # node's id string plus two (so negative index length minus two).
             _path = getattr(node, node._cte_node_path)
-            return _path[:-len(str(node.id)) - 2].index(str(subject.id)) > 0
+            return _path[: -len(str(node.id)) - 2].index(str(subject.id)) > 0
 
     def is_leaf(self, node):
         """ Returns ``True`` if the given `node` is a leaf (has no children),
@@ -522,7 +567,10 @@ class CTENodeManager(Manager):
         return node.children.exists()
 
     def attribute_path(
-        self, node, attribute, missing=None,
+        self,
+        node,
+        attribute,
+        missing=None,
         visitor=lambda node, attribute: getattr(node, attribute, None),
     ):
         """ Generates a list of values of the `attribute` of all ancestors of
@@ -549,10 +597,7 @@ class CTENodeManager(Manager):
             :return: a list of values of the required `attribute` of the
                 ancestor path of the given `node`.
         """
-        return [
-            visitor(c, attribute) or missing
-            for c in node.ancestors()
-        ] + [
+        return [visitor(c, attribute) or missing for c in node.ancestors()] + [
             visitor(node, attribute) or missing
         ]
 
@@ -596,16 +641,16 @@ class CTENodeManager(Manager):
             :return: a dictionary representation of the structure of the forest.
         """
         return [
-            root.as_tree(visitor=visitor, children=children)
-            for root in self.roots()
+            root.as_tree(visitor=visitor, children=children) for root in self.roots()
         ]
 
     def node_as_tree(
         self,
         node,
         visitor=lambda self, node: self._default_node_visitor(node),
-        children=lambda self, node, visitor, children:
-            self._default_node_children(node, visitor, children),
+        children=lambda self, node, visitor, children: self._default_node_children(
+            node, visitor, children
+        ),
     ):
         """ Visits a :class:`CTENode` `node` and delegates to the (optional)
             `visitor` callback, as well as the (optional) `children` callback,
@@ -640,12 +685,12 @@ class CTENodeManager(Manager):
         :return: a dictionary representation of the structure of the node.
         """
         return {
-            'depth': getattr(node, node._cte_node_depth),
-            'path': [str(c) for c in getattr(node, node._cte_node_path)],
-            'ordering': getattr(node, node._cte_node_ordering),
-            'leaf': node.is_leaf(),
-            'branch': node.is_branch(),
-            'node': node,
+            "depth": getattr(node, node._cte_node_depth),
+            "path": [str(c) for c in getattr(node, node._cte_node_path)],
+            "ordering": getattr(node, node._cte_node_ordering),
+            "leaf": node.is_leaf(),
+            "branch": node.is_branch(),
+            "node": node,
         }
 
     def _default_node_children(self, node, visitor, children):
@@ -673,12 +718,9 @@ class CTENodeManager(Manager):
         """
         return {
             self.model._cte_node_children: [
-                self.node_as_tree(
-                    child,
-                    visitor=visitor,
-                    children=children,
-                ) for child in node.children.all()
-            ],
+                self.node_as_tree(child, visitor=visitor, children=children)
+                for child in node.children.all()
+            ]
         }
 
     def drilldown(self, attributes, path):
@@ -789,7 +831,7 @@ class CTENodeManager(Manager):
         if method == self.DELETE_METHOD_NONE:
             method = self.DEFAULT_DELETE_METHOD
         # Delegate to appropriate method.
-        getattr(self, 'prepare_delete_%s' % method)(node, position, save)
+        getattr(self, "prepare_delete_%s" % method)(node, position, save)
 
     def prepare_delete_pharaoh(self, node, position=None, save=True):
         """ Prepares a given :class:`CTENode` `node` for deletion, by executing
@@ -1026,26 +1068,25 @@ class CTENode(Model):
 
     # This ForeignKey is mandatory, however, its name can be different, as long
     # as it's specified through _cte_node_parent.
-    _cte_node_parent = 'parent'
-    parent = ForeignKey('self', on_delete=CASCADE, null=True, blank=True,
-                        related_name='children')
+    _cte_node_parent = "parent"
+    parent = ForeignKey(
+        "self", on_delete=CASCADE, null=True, blank=True, related_name="children"
+    )
 
     # This custom Manager is mandatory.
     objects = CTENodeManager()
 
     class Meta:
         abstract = True
-        base_manager_name = 'objects'
+        base_manager_name = "objects"
         # Prevent cycles in order to maintain tree / forest property.
-        unique_together = [('id', 'parent')]
+        unique_together = [("id", "parent")]
 
     def clean(self):
         """ Prevents cycles in the tree. """
         super(CTENode, self).clean()
         if self.parent and self.pk in getattr(self.parent, self._cte_node_path):
-            raise ValidationError(_(
-                'A node cannot be made a descendant of itself.'
-            ))
+            raise ValidationError(_("A node cannot be made a descendant of itself."))
 
     def root(self):
         """ Returns the CTENode which is the root of the tree in which this
@@ -1176,11 +1217,11 @@ class CTENode(Model):
             :return: a list of values of the required `attribute` of the
                 ancestor path of this node.
         """
-        _parameters = {'node': self, 'attribute': attribute}
+        _parameters = {"node": self, "attribute": attribute}
         if missing is not None:
-            _parameters['missing'] = missing
+            _parameters["missing"] = missing
         if visitor is not None:
-            _parameters['visitor'] = visitor
+            _parameters["visitor"] = visitor
         return self.__class__.objects.attribute_path(**_parameters)
 
     def as_tree(self, visitor=None, children=None):
@@ -1203,11 +1244,11 @@ class CTENode(Model):
 
             :return: a dictionary representation of the structure of the forest.
         """
-        _parameters = {'node': self}
+        _parameters = {"node": self}
         if visitor is not None:
-            _parameters['visitor'] = visitor
+            _parameters["visitor"] = visitor
         if children is not None:
-            _parameters['children'] = children
+            _parameters["children"] = children
         return self.__class__.objects.node_as_tree(**_parameters)
 
     def move(self, destination=None, position=None, save=False):
@@ -1256,6 +1297,7 @@ class CTENode(Model):
                 :meth:`save` method should be invoked after each move operation,
                 should the delete method require any moves.
         """
-        self.__class__.objects.prepare_delete(self, method=method,
-                                              position=position, save=save)
+        self.__class__.objects.prepare_delete(
+            self, method=method, position=position, save=save
+        )
         return super(CTENode, self).delete()

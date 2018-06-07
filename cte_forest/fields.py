@@ -40,26 +40,14 @@ from django.db.models import IntegerField, TextField
 
 class DepthField(IntegerField):
     def __init__(self):
-        super(DepthField, self).__init__(
-            null=True,
-            blank=True,
-            editable=False,
-        )
+        super(DepthField, self).__init__(null=True, blank=True, editable=False)
 
 
 class PathField(TextField):
     def __init__(self):
-        super(PathField, self).__init__(
-            null=True,
-            blank=True,
-            editable=False,
-        )
+        super(PathField, self).__init__(null=True, blank=True, editable=False)
 
 
 class OrderingField(TextField):
     def __init__(self):
-        super(OrderingField, self).__init__(
-            null=True,
-            blank=True,
-            editable=False,
-        )
+        super(OrderingField, self).__init__(null=True, blank=True, editable=False)

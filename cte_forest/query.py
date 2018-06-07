@@ -38,11 +38,12 @@ from __future__ import unicode_literals
 import django
 from django.db import connections
 from django.db.models.query import QuerySet
-from django.db.models.sql import (
-    AggregateQuery, DeleteQuery, InsertQuery, UpdateQuery,
-)
+from django.db.models.sql import AggregateQuery, DeleteQuery, InsertQuery, UpdateQuery
 from django.db.models.sql.compiler import (
-    SQLAggregateCompiler, SQLCompiler, SQLDeleteCompiler, SQLInsertCompiler,
+    SQLAggregateCompiler,
+    SQLCompiler,
+    SQLDeleteCompiler,
+    SQLInsertCompiler,
     SQLUpdateCompiler,
 )
 from django.db.models.sql.query import Query
@@ -142,34 +143,39 @@ class CTEQuery(Query):
         super(CTEQuery, self).__init__(model, where=where)
         # import from models here to avoid circular imports.
         from .models import CTENodeManager
+
         if model is not None:
             where = [self._generate_where(self)]
             # If an offset Node is specified, then only those Nodes which
             # contain the offset Node as a parent (in their path virtual field)
             # will be returned.
             if offset is not None:
-                where.append("""'{id}' = ANY({cte}."{path}")""".format(
-                    cte=model._cte_node_table,
-                    path=model._cte_node_path,
-                    id=str(offset.id)))
+                where.append(
+                    """'{id}' = ANY({cte}."{path}")""".format(
+                        cte=model._cte_node_table,
+                        path=model._cte_node_path,
+                        id=str(offset.id),
+                    )
+                )
             order_by_prefix = []
-            if model._cte_node_traversal == \
-                    CTENodeManager.TREE_TRAVERSAL_NONE:
+            if model._cte_node_traversal == CTENodeManager.TREE_TRAVERSAL_NONE:
                 chosen_traversal = CTENodeManager.DEFAULT_TREE_TRAVERSAL
             else:
                 chosen_traversal = model._cte_node_traversal
             if chosen_traversal == CTENodeManager.TREE_TRAVERSAL_DFS:
                 order_by_prefix = [model._cte_node_ordering]
             if chosen_traversal == CTENodeManager.TREE_TRAVERSAL_BFS:
-                order_by_prefix = [model._cte_node_depth,
-                                   model._cte_node_ordering]
+                order_by_prefix = [model._cte_node_depth, model._cte_node_ordering]
             # prepend correct CTE table prefix to order_by fields
             order_by = [
-                '{cte}.{field}'.format(cte=model._cte_node_table, field=field)
-                for field in order_by_prefix]
-            if hasattr(model, '_cte_node_order_by') and \
-                    model._cte_node_order_by is not None and \
-                    len(model._cte_node_order_by) > 0:
+                "{cte}.{field}".format(cte=model._cte_node_table, field=field)
+                for field in order_by_prefix
+            ]
+            if (
+                hasattr(model, "_cte_node_order_by")
+                and model._cte_node_order_by is not None
+                and len(model._cte_node_order_by) > 0
+            ):
                 order_by.extend(
                     field[0] if type(field) == tuple else field
                     for field in model._cte_node_order_by
@@ -180,21 +186,22 @@ class CTEQuery(Query):
             # actual query needs it.
             self.add_extra(
                 select={
-                    model._cte_node_depth: '{cte}.{depth}'.format(
-                        cte=model._cte_node_table,
-                        depth=model._cte_node_depth),
-                    model._cte_node_path: '{cte}.{path}'.format(
-                        cte=model._cte_node_table,
-                        path=model._cte_node_path),
-                    model._cte_node_ordering: '{cte}.{ordering}'.format(
-                        cte=model._cte_node_table,
-                        ordering=model._cte_node_ordering),
+                    model._cte_node_depth: "{cte}.{depth}".format(
+                        cte=model._cte_node_table, depth=model._cte_node_depth
+                    ),
+                    model._cte_node_path: "{cte}.{path}".format(
+                        cte=model._cte_node_table, path=model._cte_node_path
+                    ),
+                    model._cte_node_ordering: "{cte}.{ordering}".format(
+                        cte=model._cte_node_table, ordering=model._cte_node_ordering
+                    ),
                 },
                 select_params=None,
                 where=where,
                 params=None,
                 tables=None,
-                order_by=order_by)
+                order_by=order_by,
+            )
 
     @classmethod
     def _generate_where(cls, query):
@@ -202,10 +209,12 @@ class CTEQuery(Query):
             if table in query.table_map:
                 return query.table_map[table][0]
             return table
+
         return '{cte}."{pk}" = {table}."{pk}"'.format(
             cte=query.model._cte_node_table,
             pk=query.model._meta.pk.attname,
-            table=maybe_alias(query.model._meta.db_table))
+            table=maybe_alias(query.model._meta.db_table),
+        )
 
     @classmethod
     def _remove_cte_where(cls, query):
@@ -237,6 +246,7 @@ class CTEQuery(Query):
         }.get(self.__class__, CTEQueryCompiler)(self, connection, using)
 
     if django.VERSION < (2, 0):
+
         def clone(self, klass=None, memo=None, **kwargs):
             """ Overrides Django's Query clone in order to return appropriate CTE
                 compiler based on the target Query class. This mechanism is used by
@@ -252,6 +262,7 @@ class CTEQuery(Query):
             return super(CTEQuery, self).clone(klass, memo, **kwargs)
 
     else:
+
         def chain(self, klass=None):
             """ Overrides Django's Query clone in order to return appropriate CTE
                 compiler based on the target Query class. This mechanism is used by
@@ -325,7 +336,8 @@ class CTECompiler(object):
                 where=None,
                 params=None,
                 tables=[query.model._cte_node_table],
-                order_by=None)
+                order_by=None,
+            )
 
         # place appropriate CTE table prefix to any order_by or extra_order_by
         # entries which reference virtual fields, and preserve the optional
@@ -338,14 +350,16 @@ class CTECompiler(object):
 
         def maybe_prefix_order_by(order_by):
             return [
-                '{sign}{cte}.{column}'.format(
-                    sign='-' if order[0] == '-' else '',
+                "{sign}{cte}.{column}".format(
+                    sign="-" if order[0] == "-" else "",
                     cte=query.model._cte_node_table,
-                    column=order.lstrip('-'))
-                if order.lstrip('-') in cte_columns
+                    column=order.lstrip("-"),
+                )
+                if order.lstrip("-") in cte_columns
                 else order
                 for order in order_by
             ]
+
         query.order_by = maybe_prefix_order_by(query.order_by)
         query.extra_order_by = maybe_prefix_order_by(query.extra_order_by)
 
@@ -365,7 +379,7 @@ class CTECompiler(object):
                 else:
                     name = field
                 _field = query.model._meta.get_field(name)
-                if _field.db_type(connection).startswith('varchar'):
+                if _field.db_type(connection).startswith("varchar"):
                     return 'CAST (T."%s" AS TEXT)' % name
                 else:
                     return 'T."%s"' % name
@@ -375,8 +389,9 @@ class CTECompiler(object):
         # condition, as most types can be used directly in the path, especially
         # since no other fields with incompatible types are combined (with a
         # notable exception of VARCHAR types which must be converted to TEXT).
-        pk_path = maybe_cast((query.model._meta.pk.attname,
-                              query.model._cte_node_primary_key_type))
+        pk_path = maybe_cast(
+            (query.model._meta.pk.attname, query.model._cte_node_primary_key_type)
+        )
 
         # If no explicit ordering is specified, then use the primary key. If the
         # primary key is used in ordering, and it is of a type which needs
@@ -386,39 +401,45 @@ class CTECompiler(object):
         # attribute. Specifying the cast type of the primary key in the
         # _cte_node_order_by attribute has precedence over
         # _cte_node_primary_key_type.
-        if not hasattr(query.model, '_cte_node_order_by') or \
-                query.model._cte_node_order_by is None or \
-                len(query.model._cte_node_order_by) == 0:
-            order = 'array[%s]' % maybe_cast((
-                query.model._meta.pk.attname,
-                query.model._cte_node_primary_key_type))
+        if (
+            not hasattr(query.model, "_cte_node_order_by")
+            or query.model._cte_node_order_by is None
+            or len(query.model._cte_node_order_by) == 0
+        ):
+            order = "array[%s]" % maybe_cast(
+                (query.model._meta.pk.attname, query.model._cte_node_primary_key_type)
+            )
         else:
             # Compute the ordering virtual field constructor, possibly casting
             # fields into a common type.
-            order = '||'.join(
-                'array[%s]' % maybe_cast(field)
+            order = "||".join(
+                "array[%s]" % maybe_cast(field)
                 for field in query.model._cte_node_order_by
             )
         # Prepend the CTE with the ordering constructor and table
         # name to the SQL obtained from Django above.
-        return (''.join([
-            cls.CTE.format(
-                order=order,
-                cte=query.model._cte_node_table,
-                depth=query.model._cte_node_depth,
-                path=query.model._cte_node_path,
-                ordering=query.model._cte_node_ordering,
-                parent=query.model._cte_node_parent_attname,
-                pk=query.model._meta.pk.attname,
-                pk_path=pk_path,
-                db_table=query.model._meta.db_table
+        return (
+            "".join(
+                [
+                    cls.CTE.format(
+                        order=order,
+                        cte=query.model._cte_node_table,
+                        depth=query.model._cte_node_depth,
+                        path=query.model._cte_node_path,
+                        ordering=query.model._cte_node_ordering,
+                        parent=query.model._cte_node_parent_attname,
+                        pk=query.model._meta.pk.attname,
+                        pk_path=pk_path,
+                        db_table=query.model._meta.db_table,
+                    ),
+                    sql[0],
+                ]
             ),
-            sql[0],
-        ]), sql[1])
+            sql[1],
+        )
 
 
 class CTEQueryCompiler(SQLCompiler):
-
     def as_sql(self, *args, **kwargs):
         """
         Overrides the :class:`SQLCompiler` method in order to prepend the
@@ -432,13 +453,14 @@ class CTEQueryCompiler(SQLCompiler):
         :return:
         :rtype:
         """
+
         def _as_sql():
             return super(CTEQueryCompiler, self).as_sql(*args, **kwargs)
+
         return CTECompiler.generate_sql(self.connection, self.query, _as_sql)
 
 
 class CTEUpdateQueryCompiler(SQLUpdateCompiler):
-
     def as_sql(self, *args, **kwargs):
         """
         Overrides the :class:`SQLUpdateCompiler` method in order to remove any
@@ -453,7 +475,6 @@ class CTEUpdateQueryCompiler(SQLUpdateCompiler):
 
 
 class CTEInsertQueryCompiler(SQLInsertCompiler):
-
     def as_sql(self, *args, **kwargs):
         """
         Overrides the :class:`SQLInsertCompiler` method in order to remove any
@@ -468,7 +489,6 @@ class CTEInsertQueryCompiler(SQLInsertCompiler):
 
 
 class CTEDeleteQueryCompiler(SQLDeleteCompiler):
-
     def as_sql(self, *args, **kwargs):
         """
         Overrides the :class:`SQLDeleteCompiler` method in order to remove any
@@ -483,7 +503,6 @@ class CTEDeleteQueryCompiler(SQLDeleteCompiler):
 
 
 class CTEAggregateQueryCompiler(SQLAggregateCompiler):
-
     def as_sql(self, *args, **kwargs):
         """
         Overrides the :class:`SQLAggregateCompiler` method in order to
@@ -495,6 +514,8 @@ class CTEAggregateQueryCompiler(SQLAggregateCompiler):
         :return:
         :rtype:
         """
+
         def _as_sql():
             return super(CTEAggregateQueryCompiler, self).as_sql(*args, **kwargs)
+
         return CTECompiler.generate_sql(self.connection, self.query, _as_sql)

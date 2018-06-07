@@ -37,8 +37,14 @@
 from uuid import uuid4
 
 from django.db.models import (
-    CASCADE, CharField, DateField, FloatField, ForeignKey, Model,
-    PositiveIntegerField, UUIDField,
+    CASCADE,
+    CharField,
+    DateField,
+    FloatField,
+    ForeignKey,
+    Model,
+    PositiveIntegerField,
+    UUIDField,
 )
 
 from cte_forest.models import CTENode, CTENodeManager
@@ -51,7 +57,7 @@ class SimpleNode(CTENode, Model):
 
 class NoneDeleteNode(CTENode, Model):
 
-    _cte_node_delete_method = 'none'
+    _cte_node_delete_method = "none"
 
 
 class SimpleNodeUser(Model):
@@ -75,7 +81,7 @@ class SimpleNamedNode(NamedNode):
 
 class OrderedNamedNode(NamedNode):
 
-    _cte_node_order_by = ['name']
+    _cte_node_order_by = ["name"]
 
 
 class ValueNamedNode(NamedNode):
@@ -94,27 +100,27 @@ class DFSOrderedNode(CTENode, Model):
 
     v = PositiveIntegerField()
 
-    _cte_node_traversal = 'dfs'
+    _cte_node_traversal = "dfs"
 
-    _cte_node_order_by = ['v']
+    _cte_node_order_by = ["v"]
 
 
 class BFSOrderedNode(CTENode, Model):
 
     v = PositiveIntegerField()
 
-    _cte_node_traversal = 'bfs'
+    _cte_node_traversal = "bfs"
 
-    _cte_node_order_by = ['v']
+    _cte_node_order_by = ["v"]
 
 
 class NoneTraversalNode(CTENode, Model):
 
     v = PositiveIntegerField()
 
-    _cte_node_traversal = 'none'
+    _cte_node_traversal = "none"
 
-    _cte_node_order_by = ['v']
+    _cte_node_order_by = ["v"]
 
 
 class TypeCoercionNode(CTENode, Model):
@@ -123,7 +129,7 @@ class TypeCoercionNode(CTENode, Model):
 
     v = PositiveIntegerField()
 
-    _cte_node_order_by = [('v', 'text'), 'name']
+    _cte_node_order_by = [("v", "text"), "name"]
 
 
 class TypeCombinationNode(CTENode, Model):
@@ -132,9 +138,9 @@ class TypeCombinationNode(CTENode, Model):
 
     v2 = FloatField()
 
-    _cte_node_traversal = 'bfs'
+    _cte_node_traversal = "bfs"
 
-    _cte_node_order_by = [('v1', 'float'), 'v2']
+    _cte_node_order_by = [("v1", "float"), "v2"]
 
 
 class ExoticTypeNode(CTENode, Model):
@@ -143,14 +149,14 @@ class ExoticTypeNode(CTENode, Model):
 
     y = DateField(null=True)
 
-    _cte_node_order_by = ['v']
+    _cte_node_order_by = ["v"]
 
 
 class DBTypeNode(CTENode, Model):
 
     v = UUIDField(default=uuid4)
 
-    _cte_node_order_by = ['v']
+    _cte_node_order_by = ["v"]
 
 
 class CustomPrimaryKeyNode(CTENode, Model):
@@ -170,7 +176,7 @@ class AggregationNode(CTENode, Model):
 
 class BadParameter_parent_1_Node(CTENode, Model):
 
-    _cte_node_parent = 'wrong'
+    _cte_node_parent = "wrong"
 
 
 class ArbitraryNode(CTENode, Model):
@@ -182,7 +188,7 @@ class BadParameter_parent_2_Node(CTENode, Model):
 
     wrong = ForeignKey(ArbitraryNode, on_delete=CASCADE, null=True)
 
-    _cte_node_parent = 'wrong'
+    _cte_node_parent = "wrong"
 
 
 class ArbitraryModel(Model):
@@ -194,7 +200,7 @@ class BadParameter_parent_3_Node(CTENode, Model):
 
     wrong = ForeignKey(ArbitraryModel, on_delete=CASCADE, null=True)
 
-    _cte_node_parent = 'wrong'
+    _cte_node_parent = "wrong"
 
 
 class BadParameter_parent_4_Node(Model):
@@ -204,9 +210,9 @@ class BadParameter_parent_4_Node(Model):
 
 class BadParameter_traversal_Node(CTENode, Model):
 
-    _cte_node_traversal = 'wrong'
+    _cte_node_traversal = "wrong"
 
 
 class BadParameter_delete_Node(CTENode, Model):
 
-    _cte_node_delete_method = 'wrong'
+    _cte_node_delete_method = "wrong"

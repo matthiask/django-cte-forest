@@ -36,16 +36,10 @@
 
 DEBUG = True
 
-SECRET_KEY = 'dummy'
+SECRET_KEY = "dummy"
 
-INSTALLED_APPS = (
-    'cte_forest',
-    'cte_forest_test',
-)
+INSTALLED_APPS = ("cte_forest", "cte_forest_test")
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dummy',
-    }
+    "default": {"ENGINE": "django.db.backends.postgresql_psycopg2", "NAME": "dummy"}
 }
