@@ -1,3 +1,7 @@
+If you want compatibility with other database engines (sqlite3, MariaDB, MySQL)
+and don't need all features this package offers take a look at
+`django-tree-queries <https://github.com/matthiask/django-tree-queries>`__ too!
+
 =================
 django-cte-forest
 =================
