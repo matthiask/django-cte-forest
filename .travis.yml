@@ -41,7 +41,7 @@ jobs:
       script:
         - pip install black flake8
         - flake8 .
-        - black --check tree_queries tests
+        - black --check cte_forest cte_forest_test
   allow_failures:
   - env: REQ="https://github.com/django/django/archive/master.zip#egg=Django"
 install:
