@@ -1,37 +1,51 @@
-sudo: false
-# cache: pip
+os: linux
+dist: xenial
 language: python
+cache: pip
 python:
-- "3.6"
-- "3.5"
-- "2.7"
-addons:
-  postgresql: "9.4"
-env:
-- REQ="Django>=1.10,<1.11"
-- REQ="Django>=1.11,<2.0"
-- REQ="Django>=2.0,<2.1"
-- REQ="https://github.com/django/django/archive/master.zip#egg=Django"
-matrix:
-  allow_failures:
-    - env: REQ="https://github.com/django/django/archive/master.zip#egg=Django"
-  exclude:
-    - python: "2.7"
-      env: REQ="Django>=2.0,<2.1"
-    - python: "2.7"
-      env: REQ="https://github.com/django/django/archive/master.zip#egg=Django"
-install:
-- pip install -U pip wheel
-- pip install psycopg2-binary
-- pip install $REQ
-- python setup.py install
-script: PYTHONWARNINGS=all PYTHONPATH=. cte_forest_test/manage.py test -v 2
-
+- 3.8
+services:
+  - postgresql
 jobs:
+  fast_finish: true
   include:
-    - stage: style
-      env: REQ=none
+    - python: 3.8
+      env: REQ="https://github.com/django/django/archive/master.zip#egg=Django"
+    - python: 3.8
+      env: REQ="Django>=3.1,<3.2"
+    - python: 3.7
+      env: REQ="Django>=3.1,<3.2"
+    - python: 3.6
+      env: REQ="Django>=3.1,<3.2"
+    - python: 3.7
+      env: REQ="Django>=3.0,<3.1"
+    - python: 3.6
+      env: REQ="Django>=3.0,<3.1"
+    - python: 3.7
+      env: REQ="Django>=2.2,<3.0"
+    - python: 3.6
+      env: REQ="Django>=2.2,<3.0"
+    - python: 3.5
+      env: REQ="Django>=2.2,<3.0"
+    - python: 3.7
+      env: REQ="Django>=1.11,<2.0"
+    - python: 3.6
+      env: REQ="Django>=1.11,<2.0"
+    - python: 3.5
+      env: REQ="Django>=1.11,<2.0"
+    - python: 2.7
+      env: REQ="Django>=1.11,<2.0"
+    - python: 3.8
+      env: REQ="black flake8"
       install: skip
       script:
-        - pip install flake8
+        - pip install black flake8
         - flake8 .
+        - black --check tree_queries tests
+  allow_failures:
+  - env: REQ="https://github.com/django/django/archive/master.zip#egg=Django"
+install:
+- pip install -U pip wheel
+- pip install $REQ psycopg2-binary
+- python setup.py install
+script: PYTHONWARNINGS=all PYTHONPATH=. cte_forest_test/manage.py test -v 2
