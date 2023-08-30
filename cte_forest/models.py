@@ -38,7 +38,7 @@ from __future__ import unicode_literals
 from django.core.exceptions import FieldError, ImproperlyConfigured, ValidationError
 from django.db.models import CASCADE, ForeignKey, Manager, Model
 from django.core.exceptions import FieldDoesNotExist
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext_lazy as _
 
 from .query import CTEQuerySet
 
